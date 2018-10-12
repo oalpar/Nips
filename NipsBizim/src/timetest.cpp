@@ -8,19 +8,23 @@
 
 #include <random>
 
+#include "common.h"
+#include "generator.h"
+
+
 using namespace std;
 
 
-void testTime(uint32_t trials)
+void testTime(uint32_t trials, uint32_t* nums)
 {
     volatile uint32_t x;
 
-    mt19937 rng;
-    rng.seed(random_device()());
-    uniform_int_distribution<uint32_t> dist;
-    vector<uint32_t> nums;
-    for (uint32_t i = 0; i < trials; ++i)
-        nums.push_back(dist(rng));
+    //mt19937 rng;
+    //rng.seed(random_device()());
+    //uniform_int_distribution<uint32_t> dist;
+    //vector<uint32_t> nums;
+    //for (uint32_t i = 0; i < trials; ++i)
+    //nums.push_back(dist(rng));
 
     multishift hms;
     hms.init();
@@ -105,5 +109,7 @@ void testTime(uint32_t trials)
 
 int main()
 {
-    testTime(10000000); // 10^7 trials
+  uint32_t* nums;
+  generateData(nums, 25, 20, 1);
+  testTime(2<<25, nums); // 10^7 trials
 }
