@@ -119,4 +119,4 @@ uint32_t citywrap::operator()(uint32_t x)
     return h;
 }
 
-endif //_HASHING_MORE_H_
+#endif //_HASHING_MORE_H_

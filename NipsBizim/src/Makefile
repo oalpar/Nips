@@ -1,4 +1,4 @@
-CPPFLAGS	= -O3 -std=c++0x
+CPPFLAGS	= -O3 -std=c++0x -fopenmp
 CC			= g++
 MM			= framework/MurmurHash3.cpp
 B2			= framework/blake2b-ref.c
