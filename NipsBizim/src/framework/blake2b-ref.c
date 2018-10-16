@@ -74,7 +74,7 @@ static void blake2b_init0( blake2b_state *S )
   size_t i;
   memset( S, 0, sizeof( blake2b_state ) );
 
-  for( i = 0; i < 8; ++i ) S->h[i] = blake2b_IV[i];
+  for( i = 0; i < 8; ++i ) S->h[i] = blake2b_IV[i]; // it fills the states h array with numbers
 }
 
 /* init xors IV with input parameter block */
@@ -87,30 +87,30 @@ int blake2b_init_param( blake2b_state *S, const blake2b_param *P )
 
   /* IV XOR ParamBlock */
   for( i = 0; i < 8; ++i )
-    S->h[i] ^= load64( p + sizeof( S->h[i] ) * i );
+    S->h[i] ^= load64( p + sizeof( S->h[i] ) * i ); //what is load16
 
-  S->outlen = P->digest_length;
-  return 0;
+  S->outlen = P->digest_length; //why would I point outlen to digest len
+  return 0; //why have int function if i will return 0 always
 }
 
 
 
-int blake2b_init( blake2b_state *S, size_t outlen )
+int blake2b_init( blake2b_state *S, size_t outlen ) //this state thing is a struct but idk the reason for it yet
 {
-  blake2b_param P[1];
+  blake2b_param P[1]; // #define BLAKE2_PACKED(x) __pragma(pack(push, 1)) x __pragma(pack(pop)) theres a definition like that , its for the blake2b param, which has a parameter  of blake2b_state
 
-  if ( ( !outlen ) || ( outlen > BLAKE2B_OUTBYTES ) ) return -1;
+  if ( ( !outlen ) || ( outlen > BLAKE2B_OUTBYTES ) ) return -1; // if outlen is 0 
 
-  P->digest_length = (uint8_t)outlen;
-  P->key_length    = 0;
-  P->fanout        = 1;
-  P->depth         = 1;
+  P->digest_length = (uint8_t)outlen;  //
+  P->key_length    = 0; 
+  P->fanout        = 1; 
+  P->depth         = 1; 
   store32( &P->leaf_length, 0 );
   store32( &P->node_offset, 0 );
   store32( &P->xof_length, 0 );
   P->node_depth    = 0;
   P->inner_length  = 0;
-  memset( P->reserved, 0, sizeof( P->reserved ) );
+  memset( P->reserved, 0, sizeof( P->reserved ) ); //it puts size of p->reserved amount of 0's into the memory I think for memmory alignment
   memset( P->salt,     0, sizeof( P->salt ) );
   memset( P->personal, 0, sizeof( P->personal ) );
   return blake2b_init_param( S, P );
@@ -275,26 +275,26 @@ int blake2b( void *out, size_t outlen, const void *in, size_t inlen, const void 
   blake2b_state S[1];
 
   /* Verify parameters */
-  if ( NULL == in && inlen > 0 ) return -1;
+  if ( NULL == in && inlen > 0 ) return -1; //checks if theres an input and if not it checks if the inlen is wrong
 
-  if ( NULL == out ) return -1;
+  if ( NULL == out ) return -1; //checks if theres anything to output to
 
-  if( NULL == key && keylen > 0 ) return -1;
+  if( NULL == key && keylen > 0 ) return -1; //same thing for key
 
-  if( !outlen || outlen > BLAKE2B_OUTBYTES ) return -1;
+  if( !outlen || outlen > BLAKE2B_OUTBYTES ) return -1; //checks if the outlen is 0 or if outlen is > 64
 
-  if( keylen > BLAKE2B_KEYBYTES ) return -1;
+  if( keylen > BLAKE2B_KEYBYTES ) return -1; // checks if keylen is bigger than 64
 
-  if( keylen > 0 )
+  if( keylen > 0 ) //in our case this is 0
   {
     if( blake2b_init_key( S, outlen, key, keylen ) < 0 ) return -1;
   }
-  else
+  else // so we use this
   {
-    if( blake2b_init( S, outlen ) < 0 ) return -1;
+    if( blake2b_init( S, outlen ) < 0 ) return -1; //the function always returns 0 so why would I use this wtf
   }
 
-  blake2b_update( S, ( const uint8_t * )in, inlen );
+  blake2b_update( S, ( const uint8_t * )in, inlen ); 
   blake2b_final( S, out, outlen );
   return 0;
 }
