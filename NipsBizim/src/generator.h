@@ -77,8 +77,9 @@ void generateData(uint32_t* &data, unsigned long long no_stream, unsigned long l
   double max_rand = 0, min_rand = INT_MAX;
   double* rand_data = new double[no_stream];
 if(distNum == NORMAL)
-{
-  //  cout << "normal " << endl;
+  {
+
+   cout << "normal with size " <<no_stream << endl;
   double alp = 1.1;
   zipf(alp, no_unique);
 #pragma omp parallel num_threads(16)

@@ -18,7 +18,7 @@ using namespace std;
 void testTime(uint32_t trials, uint32_t* nums)
 {
     volatile uint32_t x;
-
+    
     //mt19937 rng;
     //rng.seed(random_device()());
     //uniform_int_distribution<uint32_t> dist;
@@ -27,10 +27,14 @@ void testTime(uint32_t trials, uint32_t* nums)
     //nums.push_back(dist(rng));
 
     multishift hms;
+
     hms.init();
     clock_t start = clock();
+    
     for (uint32_t i = 0; i < trials; i+=1)
-        x=hms(nums[i]);
+      {    x=hms(nums[i]);
+	//	cout<<i<<" "<<trials<<endl;
+      }
     clock_t end = clock();
     cout << "Multiply-shift & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
 
@@ -110,6 +114,11 @@ void testTime(uint32_t trials, uint32_t* nums)
 int main()
 {
   uint32_t* nums;
-  generateData(nums, 25, 20, 1);
+  int superSetSize = 2<<25;
+  int setSize = 2<<20;
+  
+  generateData(nums,superSetSize, setSize, 1);
+  //for(int k=0; k<superSetSize;k++)
+  //x cout<<nums[k]<<endl;
   testTime(2<<25, nums); // 10^7 trials
 }
