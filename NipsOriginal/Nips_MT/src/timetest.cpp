@@ -105,5 +105,5 @@ void testTime(uint32_t trials)
 
 int main()
 {
-    testTime(10000000); // 10^7 trials
+  testTime(2<<25); // 10^7 trials
 }
