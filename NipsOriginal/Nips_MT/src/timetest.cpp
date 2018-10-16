@@ -13,9 +13,9 @@ using namespace std;
 
 void testTime(uint32_t trials)
 {
-    volatile uint32_t x;
 
-    mt19937 rng;
+    volatile uint32_t x;  
+  mt19937 rng;
     rng.seed(random_device()());
     uniform_int_distribution<uint32_t> dist;
     vector<uint32_t> nums;
@@ -29,7 +29,7 @@ void testTime(uint32_t trials)
         x=hms(nums[i]);
     clock_t end = clock();
     cout << "Multiply-shift & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
-
+    
     mixedtab hmt;
     hmt.init();
     start = clock();
@@ -37,6 +37,7 @@ void testTime(uint32_t trials)
         x=hmt(nums[i]);
     end = clock();
     cout << "Mixed tabulation & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+    
 
     polyhash2 hp2;
     hp2.init();
@@ -45,6 +46,7 @@ void testTime(uint32_t trials)
         x=hp2(nums[i]);
     end = clock();
     cout << "2-wise PolyHash & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+    
 
     polyhash3 hp3;
     hp3.init();
@@ -104,6 +106,6 @@ void testTime(uint32_t trials)
 }
 
 int main()
-{
+{ 
   testTime(2<<25); // 10^7 trials
 }
