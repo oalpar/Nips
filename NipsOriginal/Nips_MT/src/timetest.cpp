@@ -57,9 +57,18 @@ void testTime(uint32_t trials)
 		      nums[i+6],nums[i+7]} ;
 	 values= _mm256_load_si256((__m256i*) arr2); 
 	 x1=hms(values);
+	 int xsimd[8];
+	 xsimd[0] = _mm256_extract_epi32(x1, 0);
+	 xsimd[1] = _mm256_extract_epi32(x1, 1);
+	 xsimd[2] = _mm256_extract_epi32(x1, 2);
+	 xsimd[3] = _mm256_extract_epi32(x1, 3);
+	 xsimd[4] = _mm256_extract_epi32(x1, 4);
+	 xsimd[5] = _mm256_extract_epi32(x1, 5);
+	 xsimd[6] = _mm256_extract_epi32(x1, 6);
+	 xsimd[7] = _mm256_extract_epi32(x1, 7);
 	 for(int p=0;p<8;p++){
-	   cout <<(x1[p] == nums2[p+i]) << endl;
-	
+	   //cout <<(x1[p] == nums2[p+i]) << endl;
+	   cout << "Real: " << nums2[p] << " Simd: "<< xsimd[p] <<endl;// << " Simd: " << x1[p] << endl;
 	 }
 	 break;
        }
