@@ -55,4 +55,4 @@ uint32_t org_multishift::operator()(uint32_t x)
 }
 
 
-
+return m_a*x + m_b
