@@ -89,7 +89,7 @@ k_partition<F>::k_partition(uint32_t k, uint32_t hparam)
 }
 
 // The actual k-partition part.
-template <class F>
+/*template <class F>
 void k_partition<F>::sketch_core(const vector<uint32_t>& input, vector<uint32_t>& output)
 {
     output.resize(m_k, -1); // Prepare k-partition sketch (initialize to max)
@@ -101,6 +101,7 @@ void k_partition<F>::sketch_core(const vector<uint32_t>& input, vector<uint32_t>
         output[bin] = min(output[bin],val);
     }
 }
+*/
 
 // Call the core and do densification
 template <class F>

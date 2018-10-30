@@ -30,10 +30,10 @@ class multishift
     bool hasInit;
 #endif
     uint64_t m_a, m_b;
-
+	__m256i m_ma, m_mb;
 public:
     multishift();
-    uint32_t operator()(uint32_t x);
+    __m256i operator()(__m256i th_8);
     void init();
 };
 
@@ -51,6 +51,11 @@ void multishift::init()
     std::uniform_int_distribution<uint64_t> dist;
     m_a = dist(rng);
     m_b = dist(rng);
+	int arr_a[8],arr_b[8];
+	std::fill_n(arr_a,8,m_a);
+	std::fill_n(arr_b,8,m_b);
+	m_ma= _mm256_load_si256((__m256i *) arr_a);
+	m_mb= _mm256_load_si256((__m256i *) arr_b);
     // TODO: Replace with the lines below if using randomgen.h
     //m_a = getRandomUInt64();
     //m_b = getRandomUInt64();
@@ -58,13 +63,14 @@ void multishift::init()
     hasInit=true;
 #endif
 }
-
-uint32_t multishift::operator()(uint32_t x)
+__m256i multishift::operator()(__m256i th_8)
 {
 #ifdef DEBUG
     assert(hasInit);
 #endif
-    return (m_a * (uint64_t)x + m_b) >> 32;
+   __m256i mxx=_mm256_mullo_epi32(th_8, m_ma);
+   __m256i myy=_mm256_add_epi32(mxx,m_mb);
+    return myy;
 }
 
 /* ***************************************************

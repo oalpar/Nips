@@ -15,7 +15,7 @@
 #include "blake2.h"
 #include "blake2-impl.h"
 
-#include "city.h"
+/*#include "city.h"*/
 
 /* *************************************************************
  * Wrapper for MurMurHash similar to the rest
@@ -86,7 +86,7 @@ uint32_t blake2wrap::operator()(uint32_t x)
  * CityHash wrapper
  * **************************************************************/
 
-class citywrap
+/*class citywrap
 {
     uint64_t m_seed;
 public:
@@ -113,5 +113,5 @@ uint32_t citywrap::operator()(uint32_t x)
     h = (uint32_t)CityHash64WithSeed((const char *)&x, 4, m_seed);
     return h;
 }
-
+*/
 #endif //_HASHING_MORE_H_
