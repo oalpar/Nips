@@ -1,4 +1,0 @@
--> Bütün random sayılar 32 bit
--> Bu + city simd
--> Tabulation bi düşünelim
--> 4 paradigms
