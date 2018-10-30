@@ -1,0 +1,41 @@
+#include "framework/hashing.h"
+#include "framework/hashing_more.h"
+
+#include <iostream>
+#include <vector>
+
+#include <random>
+
+#include "common.h"
+#include "generator.h"
+
+#include <omp.h>
+
+void testTime(uint32_t trials, uint32_t* nums)
+{
+
+  volatile uint32_t x;
+  
+  multishift hms;
+  hms.init();
+  
+  double cp1 = omp_get_wtime();
+  for(unsigned i = 0; i < trials; i++)
+    x = hms(nums[i]);
+  double time = omp_get_wtime() - cp1;
+
+  std::cout << "Multiply Shift: " << time << std::endl;
+
+
+
+
+
+}
+
+
+int main()
+{
+  uint32_t* nums;
+  generateData(nums, 25, 20, 1);
+  testTime(2<<25, nums);  
+}
