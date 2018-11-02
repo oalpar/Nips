@@ -15,7 +15,7 @@ volatile uint32_t x;
    mt19937 rng;
     rng.seed(random_device()());
     uniform_int_distribution<uint32_t> dist;
-int trials =8 ;
+int trials =8;
 vector<uint32_t> nums;
     for (uint32_t i = 0; i < trials; ++i)
         nums.push_back(dist(rng));
@@ -26,7 +26,7 @@ murmurwrap1 mm;
     mm.init();
 clock_t start = clock();
     
-for (uint32_t i = 0; i < trials; ++i){
+for (uint32_t i = 0; i < 8; ++i){
         x = mm(nums[i]);
 	cout<<x<<endl;
 }
@@ -39,8 +39,6 @@ murmurwrap mmSIMD;
 mmSIMD.init();
 start=clock();
 uint32_t arr2[8]= { nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7]   };
-cout<<arr2[0]<< " hello debug "<< arr2[7]<<endl;
-
 
 __m256i murmur;
 murmur=_mm256_load_si256((__m256i *)arr2);
@@ -51,9 +49,8 @@ x1=mmSIMD(murmur);
 	
 const uint32_t* q;
 q=(const uint32_t *)  & x1;
-cout<<q[0]<<" hello afa"<< q[7]<<endl<<endl;
 
-/*
+
 uint32_t xsimd[8];
          xsimd[0] = _mm256_extract_epi32(x1, 0);
          xsimd[1] = _mm256_extract_epi32(x1, 1);
@@ -68,7 +65,7 @@ uint32_t xsimd[8];
            //cout <<(x1[p] == nums2[p+i]) << endl;
            cout << "Simd: hello "<< xsimd[p] <<endl;
          }
-*/
+
 end = clock();
     cout << "MurmurHash3 SIMD & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
 

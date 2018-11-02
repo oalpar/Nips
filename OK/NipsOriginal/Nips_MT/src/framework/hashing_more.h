@@ -46,7 +46,7 @@ void murmurwrap::init()
 __m256i murmurwrap::operator()(__m256i x)
 {
     __m256i h;
-    MurmurHash3_x86_32(&x, 4, m_seed, &h);
+    MurmurHash3_x86_323(&x, 4, m_seed, &h);
     return h;
 }
 

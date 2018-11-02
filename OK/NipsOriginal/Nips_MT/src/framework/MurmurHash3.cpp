@@ -44,8 +44,26 @@ inline uint64_t rotl64 ( uint64_t x, int8_t r )
   return (x << r) | (x >> (64 - r));
 }
 inline __m256i rotl256( __m256i x, int8_t r){
-  return ( _mm256_or_si256((_mm256_slli_epi32 (x, (int)r)),(_mm256_srli_epi32 (x, (int)r))));
+
+__m256i temp=_mm256_slli_epi32 (x, (int)r); 
+__m256i temp2= _mm256_srli_epi32 (x, 32-(int)r );
+__m256i temp3=   _mm256_or_si256((_mm256_slli_epi32 (x, (int)r)),(_mm256_srli_epi32 (x, 32-(int)r)));
+/*
+uint32_t xsimd[8];
+         xsimd[0] = _mm256_extract_epi32(temp, 0);
+cout<<xsimd[0]<<" k1 simd LEFT"<<endl;
+
+uint32_t xsimdR[8];
+	xsimdR[0] = _mm256_extract_epi32(temp2,0);
+cout<<xsimdR[0]<<" k1 simd RIGHT "<<endl;
+
+uint32_t xsimdOR[8];
+	xsimdOR[0]=_mm256_extract_epi32(temp3,0);
+cout<<xsimdOR[0]<<" k1 simd OR"<<endl;
+*/
  
+ return temp3;
+  
 }
 
 #define	ROTL32(x,y)	rotl32(x,y)
@@ -86,6 +104,7 @@ FORCE_INLINE uint32_t fmix32 ( uint32_t h )
   return h;
 }
 FORCE_INLINE __m256i fmix256(__m256i h){
+
  __m256i temp1=_mm256_set1_epi32 (0x85ebca6b);
  __m256i temp2=_mm256_set1_epi32 (0xc2b2ae35);
  h= _mm256_xor_si256 (h, _mm256_srli_epi32 (h, 16));
@@ -117,16 +136,16 @@ void MurmurHash3_x86_323 ( const void * key, int len,
 {
   const uint8_t * data = (const uint8_t*)key;
   const int nblocks = len / 4;
-  
- const uint32_t * q;
-q= (const uint32_t *) key;
-cout<<q[0] <<" debug from header " << q[7]<<endl<<endl;
-
-
+ 
   uint32_t h1 = seed;
   __m256i m_h1=_mm256_set1_epi32(seed);
   const uint32_t c1 = 0xcc9e2d51;
+  
   __m256i m_c1=_mm256_set1_epi32 (c1);
+
+
+
+
   const uint32_t c2 = 0x1b873593;
   __m256i m_c2=_mm256_set1_epi32 (c2);
   __m256i m_c3=_mm256_set1_epi32(0xe6546b64);
@@ -141,22 +160,40 @@ cout<<q[0] <<" debug from header " << q[7]<<endl<<endl;
   {
     // uint32_t k1 = getblock32(blocks,i);
     __m256i temp=getblock256(blocks,i); 
-    __m256i* temp2=&temp;
+ 
+ 
+   __m256i* temp2=&temp;
+/*
+ const uint32_t * q;
+q= (const uint32_t *) temp2;
+cout<<q[0] <<" debug from header SIMD " << q[7]<<endl<<endl;
+*/
+
     __m256i k1=_mm256_load_si256(temp2);
-    k1 *= _mm256_mullo_epi32(k1,m_c1);
+    k1 = _mm256_mullo_epi32(k1,m_c1);
+
     k1 =rotl256(k1,15);
-    k1 *= _mm256_mullo_epi32(k1,m_c2);
+//true till now
+    k1 = _mm256_mullo_epi32(k1,m_c2);
     m_h1 = _mm256_xor_si256 (m_h1, k1);
     m_h1= rotl256(m_h1,13);
     m_h1= _mm256_mullo_epi32(m_h1,m_c4);
     m_h1= _mm256_add_epi32(m_h1,m_c3);
+
+/*
+uint32_t xsimdOR[8];
+        xsimdOR[0]=_mm256_extract_epi32(m_h1,0);
+cout<<xsimdOR[0]<<" h1 simd "<<endl;
+cout << "*********************************************************" << endl;
+*/
+
 
  /*
     k1 *= c1;
     k1 = ROTL32(k1,15);
     k1 *= c2;
     
-    h1 ^= k1;
+    1 ^= k1;
     h1 = ROTL32(h1,13); 
     h1 = h1*5+0xe6546b64;
     */  
@@ -181,6 +218,7 @@ cout<<q[0] <<" debug from header " << q[7]<<endl<<endl;
   // finalization
   __m256i m_len=_mm256_set1_epi32 (len);
  m_h1= _mm256_xor_si256 (m_h1, m_len);
+ //std::cout << len << "was  before " << std::endl <<_mm256_extract_epi32(m_len,0) << " is after  \n"; 
 //  h1 ^= len;
  m_h1= fmix256(m_h1);
  // h1 = fmix32(h1);

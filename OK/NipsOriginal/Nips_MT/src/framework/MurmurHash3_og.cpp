@@ -1,5 +1,5 @@
 #include "MurmurHash3_og.h"
-
+#include <iostream>
 
 //-----------------------------------------------------------------------------
 // Platform-specific functions and macros
@@ -26,8 +26,14 @@
 #define	FORCE_INLINE inline __attribute__((always_inline))
 
 inline uint32_t rotl32 ( uint32_t x, int8_t r )
-{
-  return (x << r) | (x >> (32 - r));
+{ 
+/*
+std::cout<<x<< "hello from header 32 bit "<<std::endl;
+
+std::cout<< (x<<r) <<" x rotated left"<<std::endl;
+std::cout<< (x>>(32-r)) << " x rotated right" <<std::endl;
+std::cout<< ((x << r) | (x >> (32 - r))) << " x ORD"<<std::endl; 
+  */return (x << r) | (x >> (32 - r));
 }
 
 inline uint64_t rotl64 ( uint64_t x, int8_t r )
@@ -84,16 +90,22 @@ FORCE_INLINE uint64_t fmix64 ( uint64_t k )
 }
 
 //-----------------------------------------------------------------------------
+
   #include <iostream>
+  using namespace std;
 void MurmurHash3_x86_32 ( const void * key, int len,
                           uint32_t seed, void * out )
 {
   const uint8_t * data = (const uint8_t*)key;
   const int nblocks = len / 4;
 //  std::cout<<"byeee";  
+
   uint32_t h1 = seed;
 
-  const uint32_t c1 = 0xcc9e2d51;
+/*  const  uint32_t * q = (const uint32_t *) key;
+  cout<< q[0]<<"debug from header 32 bit"<<endl;
+*/ 
+ const uint32_t c1 = 0xcc9e2d51;
   const uint32_t c2 = 0x1b873593;
 
   //----------
@@ -104,14 +116,21 @@ void MurmurHash3_x86_32 ( const void * key, int len,
   for(int i = -nblocks; i; i++)
   {
     uint32_t k1 = getblock32(blocks,i);
-
     k1 *= c1;
+    
     k1 = ROTL32(k1,15);
     k1 *= c2;
     
     h1 ^= k1;
     h1 = ROTL32(h1,13); 
     h1 = h1*5+0xe6546b64;
+/*
+cout << "*********************************************************" << endl;
+
+std::cout<< h1 <<" h1 32 bit value "<<std::endl;
+cout << "*********************************************************" << endl;
+*/
+     
   }
 
   //----------
