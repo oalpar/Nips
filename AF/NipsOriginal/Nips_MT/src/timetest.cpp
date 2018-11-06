@@ -109,7 +109,7 @@ void testTime(uint32_t trials)
        
        
        for(int i = 0; i < 8; i++) {
-	 cout << "Real: " << nums2[i] << " Hashed: " << hashed[i] << endl;
+	 cout << "Real: " << nums[i] << " Original: " << nums2[i] << " Simd: " << hashed[i] << endl;
        }
      }
      
