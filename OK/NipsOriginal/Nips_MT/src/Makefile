@@ -1,6 +1,6 @@
-CPPFLAGS	= -O3 -std=c++11 -mavx -mavx2 -I/home/halpar/Nips/Nips/NipsOriginal/Nips_MT/src/framework
+CPPFLAGS	= -O3 -std=c++11 -mavx -mavx2 -I framework
 CC			= g++
-MM			= framework/MurmurHash3.cpp
+MM			= framework/MurmurHash3_og.cpp framework/MurmurHash3.cpp
 B2			= framework/blake2b-ref.c framework/city.cc
 
 
@@ -10,11 +10,12 @@ all : testtime
 
 
 testtime : timetest.cpp
-	${CC} ${CPPFLAGS} timetest.cpp ${MM} ${B2} -o testtime
+	${CC} ${CPPFLAGS} accuracyTest.cpp  ${MM} ${B2} -o murmurAcc
 
 
 clean :
-	rm -f testtime 
+	rm -f testtime
+
 	rm -f *.o
 	rm -f *.exe
 

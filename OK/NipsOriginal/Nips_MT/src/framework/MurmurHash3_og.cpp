@@ -1,17 +1,6 @@
-//-----------------------------------------------------------------------------
-// MurmurHash3 was written by Austin Appleby, and is placed in the public
-// domain. The author hereby disclaims copyright to this source code.
-
-// Note - The x86 and x64 versions do _not_ produce the same results, as the
-// algorithms are optimized for their respective platforms. You can still
-// compile and run any of them on any platform, but your performance with the
-// non-native version will be less than optimal.
-
-#include "MurmurHash3.h"
-#include <immintrin.h>
+#include "MurmurHash3_og.h"
 #include <iostream>
-#include <string>
-using namespace std;
+
 //-----------------------------------------------------------------------------
 // Platform-specific functions and macros
 
@@ -22,6 +11,8 @@ using namespace std;
 #define FORCE_INLINE	__forceinline
 
 #include <stdlib.h>
+#include <iostream>
+#include <string>
 
 #define ROTL32(x,y)	_rotl(x,y)
 #define ROTL64(x,y)	_rotl64(x,y)
@@ -35,35 +26,19 @@ using namespace std;
 #define	FORCE_INLINE inline __attribute__((always_inline))
 
 inline uint32_t rotl32 ( uint32_t x, int8_t r )
-{
-  return (x << r) | (x >> (32 - r));
+{ 
+/*
+std::cout<<x<< "hello from header 32 bit "<<std::endl;
+
+std::cout<< (x<<r) <<" x rotated left"<<std::endl;
+std::cout<< (x>>(32-r)) << " x rotated right" <<std::endl;
+std::cout<< ((x << r) | (x >> (32 - r))) << " x ORD"<<std::endl; 
+  */return (x << r) | (x >> (32 - r));
 }
 
 inline uint64_t rotl64 ( uint64_t x, int8_t r )
 {
   return (x << r) | (x >> (64 - r));
-}
-inline __m256i rotl256( __m256i x, int8_t r){
-
-__m256i temp=_mm256_slli_epi32 (x, (int)r); 
-__m256i temp2= _mm256_srli_epi32 (x, 32-(int)r );
-__m256i temp3=   _mm256_or_si256((_mm256_slli_epi32 (x, (int)r)),(_mm256_srli_epi32 (x, 32-(int)r)));
-/*
-uint32_t xsimd[8];
-         xsimd[0] = _mm256_extract_epi32(temp, 0);
-cout<<xsimd[0]<<" k1 simd LEFT"<<endl;
-
-uint32_t xsimdR[8];
-	xsimdR[0] = _mm256_extract_epi32(temp2,0);
-cout<<xsimdR[0]<<" k1 simd RIGHT "<<endl;
-
-uint32_t xsimdOR[8];
-	xsimdOR[0]=_mm256_extract_epi32(temp3,0);
-cout<<xsimdOR[0]<<" k1 simd OR"<<endl;
-*/
- 
- return temp3;
-  
 }
 
 #define	ROTL32(x,y)	rotl32(x,y)
@@ -86,9 +61,6 @@ FORCE_INLINE uint64_t getblock64 ( const uint64_t * p, int i )
 {
   return p[i];
 }
-FORCE_INLINE __m256i getblock256(const __m256i* p,int i){
-	return p[i];
-}
 
 //-----------------------------------------------------------------------------
 // Finalization mix - force all bits of a hash block to avalanche
@@ -102,18 +74,6 @@ FORCE_INLINE uint32_t fmix32 ( uint32_t h )
   h ^= h >> 16;
 
   return h;
-}
-FORCE_INLINE __m256i fmix256(__m256i h){
-
- __m256i temp1=_mm256_set1_epi32 (0x85ebca6b);
- __m256i temp2=_mm256_set1_epi32 (0xc2b2ae35);
- h= _mm256_xor_si256 (h, _mm256_srli_epi32 (h, 16));
- h= _mm256_mullo_epi32(h, temp1);
- h= _mm256_xor_si256 (h, _mm256_srli_epi32 (h, 13));
- h= _mm256_mullo_epi32(h, temp2);
- h= _mm256_xor_si256 (h, _mm256_srli_epi32 (h, 16));
-
- return h;
 }
 
 //----------
@@ -131,73 +91,47 @@ FORCE_INLINE uint64_t fmix64 ( uint64_t k )
 
 //-----------------------------------------------------------------------------
 
-void MurmurHash3_x86_323 ( const void * key, int len,
+  #include <iostream>
+  using namespace std;
+void MurmurHash3_x86_32 ( const void * key, int len,
                           uint32_t seed, void * out )
 {
   const uint8_t * data = (const uint8_t*)key;
   const int nblocks = len / 4;
- 
+//  std::cout<<"byeee";  
+
   uint32_t h1 = seed;
-  __m256i m_h1=_mm256_set1_epi32(seed);
-  const uint32_t c1 = 0xcc9e2d51;
-  
-  __m256i m_c1=_mm256_set1_epi32 (c1);
 
-
-
-
+/*  const  uint32_t * q = (const uint32_t *) key;
+  cout<< q[0]<<"debug from header 32 bit"<<endl;
+*/ 
+ const uint32_t c1 = 0xcc9e2d51;
   const uint32_t c2 = 0x1b873593;
-  __m256i m_c2=_mm256_set1_epi32 (c2);
-  __m256i m_c3=_mm256_set1_epi32(0xe6546b64);
-  __m256i m_c4=_mm256_set1_epi32(5);
- 
- //----------
+
+  //----------
   // body
 
-  __m256i* blocks= (__m256i *)(data + nblocks*32);
-  //const uint32_t * blocks = (const uint32_t *)(data + nblocks*4);
+  const uint32_t * blocks = (const uint32_t *)(data + nblocks*4);
+
   for(int i = -nblocks; i; i++)
   {
-    // uint32_t k1 = getblock32(blocks,i);
-    __m256i temp=getblock256(blocks,i); 
- 
- 
-   __m256i* temp2=&temp;
-/*
- const uint32_t * q;
-q= (const uint32_t *) temp2;
-cout<<q[0] <<" debug from header SIMD " << q[7]<<endl<<endl;
-*/
-
-    __m256i k1=_mm256_load_si256(temp2);
-    k1 = _mm256_mullo_epi32(k1,m_c1);
-
-    k1 =rotl256(k1,15);
-//true till now
-    k1 = _mm256_mullo_epi32(k1,m_c2);
-    m_h1 = _mm256_xor_si256 (m_h1, k1);
-    m_h1= rotl256(m_h1,13);
-    m_h1= _mm256_mullo_epi32(m_h1,m_c4);
-    m_h1= _mm256_add_epi32(m_h1,m_c3);
-
-/*
-uint32_t xsimdOR[8];
-        xsimdOR[0]=_mm256_extract_epi32(m_h1,0);
-cout<<xsimdOR[0]<<" h1 simd "<<endl;
-cout << "*********************************************************" << endl;
-*/
-
-
- /*
+    uint32_t k1 = getblock32(blocks,i);
     k1 *= c1;
+    
     k1 = ROTL32(k1,15);
     k1 *= c2;
     
-    1 ^= k1;
+    h1 ^= k1;
     h1 = ROTL32(h1,13); 
     h1 = h1*5+0xe6546b64;
-    */  
-}
+/*
+cout << "*********************************************************" << endl;
+
+std::cout<< h1 <<" h1 32 bit value "<<std::endl;
+cout << "*********************************************************" << endl;
+*/
+     
+  }
 
   //----------
   // tail
@@ -216,18 +150,16 @@ cout << "*********************************************************" << endl;
 
   //----------
   // finalization
-  __m256i m_len=_mm256_set1_epi32 (len);
- m_h1= _mm256_xor_si256 (m_h1, m_len);
- //std::cout << len << "was  before " << std::endl <<_mm256_extract_epi32(m_len,0) << " is after  \n"; 
-//  h1 ^= len;
- m_h1= fmix256(m_h1);
- // h1 = fmix32(h1);
-   *(__m256i*)out =m_h1;
- // *(uint32_t*)out = h1;
+
+  h1 ^= len;
+
+  h1 = fmix32(h1);
+
+  *(uint32_t*)out = h1;
 } 
 
 //-----------------------------------------------------------------------------
-
+/*
 void MurmurHash3_x86_128 ( const void * key, const int len,
                            uint32_t seed, void * out )
 {
@@ -411,6 +343,5 @@ void MurmurHash3_x64_128 ( const void * key, const int len,
   ((uint64_t*)out)[0] = h1;
   ((uint64_t*)out)[1] = h2;
 }
-
+*/
 //-----------------------------------------------------------------------------
-
