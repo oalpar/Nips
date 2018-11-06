@@ -2,6 +2,9 @@
 #include "framework/testHash.h"
 #include "framework/hashing_more.h"
 
+#include <immintrin.h>
+#include <stdio.h>
+
 #include <iostream>
 #include <ctime>
 #include <vector>
@@ -38,50 +41,90 @@ void testTime(uint32_t trials)
        }
 
      clock_t end2 = clock();
-     cout << "Original Multiply-shift & " << (float)(end2-start2)/CLOCKS_PER_SEC << "s \\\\" << endl;
+     cout << "Original Multiply-shift: " << (float)(end2-start2)/CLOCKS_PER_SEC << "s \\\\" << endl;
      
-     __m256i values;
-     int arr1[8];
-     _mm256_store_si256((__m256i *) arr1, values);
-     multishift hms;
+     //__m256i values;
+     //int arr1[8];
+     //_mm256_store_si256((__m256i *) arr1, values);
+     //multishift hms;
      
-     hms.init();
-     trials=trials-trials%8;
+     //hms.init();
+     //trials=trials-trials%8;
+
+     //clock_t start = clock();
+
+     //for (uint32_t i = 0; i < trials; i+=8)
+     //  { 
+     //	 int arr2[8]={nums[i], nums[i+1], nums[i+2],
+     //		      nums[i+3],nums[i+4],nums[i+5],
+     //		      nums[i+6],nums[i+7]} ;
+     //	 values= _mm256_load_si256((__m256i*) arr2); 
+     //	 x1=hms(values);
+     //	 int xsimd[8];
+     //	 xsimd[0] = _mm256_extract_epi32(x1, 0);
+     //	 xsimd[1] = _mm256_extract_epi32(x1, 1);
+     //	 xsimd[2] = _mm256_extract_epi32(x1, 2);
+     //	 xsimd[3] = _mm256_extract_epi32(x1, 3);
+     //	 xsimd[4] = _mm256_extract_epi32(x1, 4);
+     //	 xsimd[5] = _mm256_extract_epi32(x1, 5);
+     //	 xsimd[6] = _mm256_extract_epi32(x1, 6);
+     //	 xsimd[7] = _mm256_extract_epi32(x1, 7);
+     //	 for(int p=0;p<8;p++){
+     //	   //cout <<(x1[p] == nums2[p+i]) << endl;
+     //	   cout << "Real: " << nums2[p] << " Simd: "<< xsimd[p] <<endl;// << " Simd: " << x1[p] << endl;
+     //	 }
+     //	 break;
+     //}
+     //clock_t end = clock();
+     //cout << "Multiply-shift & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+     /*****************************************************************************************************/
+
+     //org_multishift simdshift;
+     //simdshift.init();
+     uint32_t hashed[8];
 
      clock_t start = clock();
-
-     for (uint32_t i = 0; i < trials; i+=8)
-       { 
-	 int arr2[8]={nums[i], nums[i+1], nums[i+2],
-		      nums[i+3],nums[i+4],nums[i+5],
-		      nums[i+6],nums[i+7]} ;
-	 values= _mm256_load_si256((__m256i*) arr2); 
-	 x1=hms(values);
-	 int xsimd[8];
-	 xsimd[0] = _mm256_extract_epi32(x1, 0);
-	 xsimd[1] = _mm256_extract_epi32(x1, 1);
-	 xsimd[2] = _mm256_extract_epi32(x1, 2);
-	 xsimd[3] = _mm256_extract_epi32(x1, 3);
-	 xsimd[4] = _mm256_extract_epi32(x1, 4);
-	 xsimd[5] = _mm256_extract_epi32(x1, 5);
-	 xsimd[6] = _mm256_extract_epi32(x1, 6);
-	 xsimd[7] = _mm256_extract_epi32(x1, 7);
-	 for(int p=0;p<8;p++){
-	   //cout <<(x1[p] == nums2[p+i]) << endl;
-	   cout << "Real: " << nums2[p] << " Simd: "<< xsimd[p] <<endl;// << " Simd: " << x1[p] << endl;
-	 }
-	 break;
+     for(int j = 0; j < trials; j+=8) {
+     __m256i vec;
+     uint32_t vecset[8] = {nums[j],nums[j+1],nums[j+2],nums[j+3],nums[j+4],nums[j+5],nums[j+6],nums[j+7]};
+     
+     
+     vec = _mm256_load_si256((__m256i*)vecset);
+     
+     for(int k = 0; k < 8; k++) {
+       hashed[k] = hms2(_mm256_extract_epi32(vec,k));
+     }	  
+     
+     if(j == 0){
+       uint32_t xsimd[8];
+       
+       xsimd[0] = _mm256_extract_epi32(vec, 0);
+       xsimd[1] = _mm256_extract_epi32(vec, 1);
+       xsimd[2] = _mm256_extract_epi32(vec, 2);
+       xsimd[3] = _mm256_extract_epi32(vec, 3);
+       xsimd[4] = _mm256_extract_epi32(vec, 4);
+       xsimd[5] = _mm256_extract_epi32(vec, 5);
+       xsimd[6] = _mm256_extract_epi32(vec, 6);
+       xsimd[7] = _mm256_extract_epi32(vec, 7);
+       
+       
+       for(int i = 0; i < 8; i++) {
+	 cout << "Real: " << nums2[i] << " Hashed: " << hashed[i] << endl;
        }
+     }
+     
+     }
      clock_t end = clock();
-     cout << "Multiply-shift & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
-     /*****************************************************************************************************/
+     cout << "Simd Multiply-shift: " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+     
      polyhash2 hp2;
-    hp2.init();
-    start = clock();
-    for (uint32_t i = 0; i < trials; ++i)
-      x=hp2(nums[i]);
-    end = clock();
-    cout << "2-wise PolyHash & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+     hp2.init();
+     
+     start = clock();
+     for (uint32_t i = 0; i < trials; ++i)
+       x=hp2(nums[i]);
+     end = clock();
+     cout << "2-wise PolyHash & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
     
     polyhash3 hp3;
     hp3.init();

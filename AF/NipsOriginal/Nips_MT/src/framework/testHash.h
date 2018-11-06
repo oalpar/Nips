@@ -17,7 +17,7 @@ class org_multishift
 #ifdef DEBUG
   bool hasInit;
 #endif
-  uint64_t m_a, m_b;
+  uint32_t m_a, m_b;
   
  public:
   org_multishift();
@@ -35,7 +35,7 @@ void org_multishift::init()
 {
   std::mt19937 rng;
   rng.seed(std::random_device()());
-  std::uniform_int_distribution<uint64_t> dist;
+  std::uniform_int_distribution<uint32_t> dist;
   m_a = dist(rng);
   m_b = dist(rng);
   // TODO: Replace with the lines below if using randomgen.h
@@ -46,13 +46,16 @@ void org_multishift::init()
   #endif
 }
 
+//uint32_t org_multishift::operator()(uint32_t x)
+//{
+//  #ifdef DEBUG
+//  assert(hasInit);
+//  #endif
+//  return (m_a * (uint64_t)x + m_b) >> 32;
+//}
+//return m_a*x + m_b
+
 uint32_t org_multishift::operator()(uint32_t x)
 {
-  #ifdef DEBUG
-  assert(hasInit);
-  #endif
-  return (m_a * (uint64_t)x + m_b) >> 32;
+  return(m_a*x + m_b);
 }
-
-
-return m_a*x + m_b

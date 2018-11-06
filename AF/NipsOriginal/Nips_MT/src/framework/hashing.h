@@ -29,9 +29,9 @@ class multishift
 #ifdef DEBUG
     bool hasInit;
 #endif
-    uint64_t m_a, m_b;
-	__m256i m_ma, m_mb;
-public:
+    uint32_t m_a, m_b;
+    __m256i m_ma, m_mb;
+ public:
     multishift();
     __m256i operator()(__m256i th_8);
     void init();
@@ -40,22 +40,22 @@ public:
 multishift::multishift()
 {
 #ifdef DEBUG
-    hasInit=false;
+  hasInit=false;
 #endif
 }
 
 void multishift::init()
 {
-    std::mt19937 rng;
-    rng.seed(std::random_device()());
-    std::uniform_int_distribution<uint64_t> dist;
-    m_a = dist(rng);
-    m_b = dist(rng);
-	int arr_a[8],arr_b[8];
-	std::fill_n(arr_a,8,m_a);
-	std::fill_n(arr_b,8,m_b);
-	m_ma= _mm256_load_si256((__m256i *) arr_a);
-	m_mb= _mm256_load_si256((__m256i *) arr_b);
+  std::mt19937 rng;
+  rng.seed(std::random_device()());
+  std::uniform_int_distribution<uint64_t> dist;
+  m_a = dist(rng);
+  m_b = dist(rng);
+  int arr_a[8],arr_b[8];
+  std::fill_n(arr_a,8,m_a);
+  std::fill_n(arr_b,8,m_b);
+  m_ma= _mm256_load_si256((__m256i *) arr_a);
+    m_mb= _mm256_load_si256((__m256i *) arr_b);
     // TODO: Replace with the lines below if using randomgen.h
     //m_a = getRandomUInt64();
     //m_b = getRandomUInt64();
