@@ -26,6 +26,7 @@ void testTime(uint32_t trials)
     uniform_int_distribution<uint32_t> dist;
     vector<uint32_t> nums;
     vector<uint32_t> nums2;
+    vector<uint32_t> nums3;
     for (uint32_t i = 0; i < trials; ++i){
       nums.push_back(dist(rng));
      
@@ -81,8 +82,10 @@ void testTime(uint32_t trials)
 
      //org_multishift simdshift;
      //simdshift.init();
-     uint32_t hashed[8];
 
+     uint32_t *hashed = new uint32_t[trials];
+     //uint32_t hashed;
+     
      clock_t start = clock();
      for(int j = 0; j < trials; j+=8) {
      __m256i vec;
@@ -92,8 +95,12 @@ void testTime(uint32_t trials)
      vec = _mm256_load_si256((__m256i*)vecset);
      
      for(int k = 0; k < 8; k++) {
-       hashed[k] = hms2(_mm256_extract_epi32(vec,k));
+       hashed[j+k] = hms2(_mm256_extract_epi32(vec,k));
      }	  
+
+     //for(int k = 0; k < 8; k++) {
+     // nums3.push_back(hashed[k]);
+     //}
      
      if(j == 0){
        uint32_t xsimd[8];
@@ -109,9 +116,9 @@ void testTime(uint32_t trials)
        
        
        for(int i = 0; i < 8; i++) {
-	 cout << "Real: " << nums[i] << " Original: " << nums2[i] << " Simd: " << hashed[i] << endl;
+	 cout << "Real: " << nums[i] << " \tOriginal: " << nums2[i] << " \tSimd: " << hashed[i] << endl;
        }
-     }
+       }
      
      }
      clock_t end = clock();
