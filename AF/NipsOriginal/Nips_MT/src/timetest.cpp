@@ -84,6 +84,7 @@ void testTime(uint32_t trials)
      //simdshift.init();
 
      uint32_t *hashed = new uint32_t[trials];
+     //uint32_t hashedc[8];
      //uint32_t hashed;
      
      clock_t start = clock();
@@ -96,13 +97,15 @@ void testTime(uint32_t trials)
      
      for(int k = 0; k < 8; k++) {
        hashed[j+k] = hms2(_mm256_extract_epi32(vec,k));
+       //cout << "Index: " <<j+k << " Val: " << hashed[j+k] << endl; 
+       //hashedc[k] = hms2(_mm256_extract_epi32(vec,k));
      }	  
 
      //for(int k = 0; k < 8; k++) {
      // nums3.push_back(hashed[k]);
      //}
      
-     if(j == 0){
+     /*if(j < -1){
        uint32_t xsimd[8];
        
        xsimd[0] = _mm256_extract_epi32(vec, 0);
@@ -113,15 +116,17 @@ void testTime(uint32_t trials)
        xsimd[5] = _mm256_extract_epi32(vec, 5);
        xsimd[6] = _mm256_extract_epi32(vec, 6);
        xsimd[7] = _mm256_extract_epi32(vec, 7);
-       
-       
-       for(int i = 0; i < 8; i++) {
-	 cout << "Real: " << nums[i] << " \tOriginal: " << nums2[i] << " \tSimd: " << hashed[i] << endl;
-       }
-       }
+       }*/
      
      }
+
      clock_t end = clock();
+     
+     for(int i = 0; i < 100; i++) {
+	 cout << "Real: " << nums[i] << " \tOriginal: " << nums2[i] << " \tSimd: " << hashed[i] << endl;
+       }
+     
+     
      cout << "Simd Multiply-shift: " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
      
      polyhash2 hp2;
