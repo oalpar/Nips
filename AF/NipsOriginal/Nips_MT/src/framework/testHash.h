@@ -57,5 +57,7 @@ void org_multishift::init()
 
 uint32_t org_multishift::operator()(uint32_t x)
 {
-  return(m_a*x + m_b);
+	uint32_t ret;
+	ret=m_a*x + m_b;
+  return ret;
 }

@@ -1,5 +1,5 @@
 #include "framework/hashing.h"
-#include "framework/testHash.h"
+
 #include "framework/hashing_more.h"
 
 #include <immintrin.h>
@@ -17,13 +17,19 @@ using namespace std;
 
 void testTime(uint32_t trials)
 {
+	mt19937 rng;
+    rng.seed(random_device()());
+	uniform_int_distribution<uint32_t> dist;
+	uint32_t ra1=dist(rng);
+	uint32_t rb1= dist(rng);
+	
     volatile __m256i x1;
     volatile uint32_t x;
-
+	multishift hms;
+	hms.init(ra1, rb1);
     volatile uint32_t x2;
-    mt19937 rng;
-    rng.seed(random_device()());
-    uniform_int_distribution<uint32_t> dist;
+    
+    
     vector<uint32_t> nums;
     vector<uint32_t> nums2;
     vector<uint32_t> nums3;
@@ -32,7 +38,7 @@ void testTime(uint32_t trials)
      
      }
      org_multishift hms2;
-     hms2.init();
+     hms2.init(ra1,rb1);
      clock_t start2 = clock();
      
      for (uint32_t i = 0; i < trials; i+=1)
@@ -57,7 +63,7 @@ void testTime(uint32_t trials)
      //for (uint32_t i = 0; i < trials; i+=8)
      //  { 
      //	 int arr2[8]={nums[i], nums[i+1], nums[i+2],
-     //		      nums[i+3],nums[i+4],nums[i+5],
+     //		      numsnums[i+3],nums[i+4],nums[i+5],
      //		      nums[i+6],nums[i+7]} ;
      //	 values= _mm256_load_si256((__m256i*) arr2); 
      //	 x1=hms(values);
@@ -94,9 +100,9 @@ void testTime(uint32_t trials)
      
      
      vec = _mm256_load_si256((__m256i*)vecset);
-     
+     __m256i test=hms(vec);
      for(int k = 0; k < 8; k++) {
-       hashed[j+k] = hms2(_mm256_extract_epi32(vec,k));
+       hashed[j+k] = _mm256_extract_epi32(test,k);
        //cout << "Index: " <<j+k << " Val: " << hashed[j+k] << endl; 
        //hashedc[k] = hms2(_mm256_extract_epi32(vec,k));
      }	  

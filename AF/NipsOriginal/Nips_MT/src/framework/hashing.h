@@ -1,8 +1,8 @@
 /* ***********************************************
  * Hash functions:
  * This file define several hash functions as
- * classes.
  *
+ * classes.
  * If DEBUG is defined it asserts that initialization
  * is done properly.
  * ***********************************************/
@@ -16,25 +16,65 @@
 #ifdef DEBUG
 #include <cassert>
 #endif
-
+#include <random>  // TODO: Replace with: #include "randomgen.h"
 // TODO: If you have a seed of random bytes (from e.g. random.org) you can use
 // the randomgen file instead to provide random numbers.
-#include <random>  // TODO: Replace with: #include "randomgen.h"
+ 
 
 /* ***********************************************
  * Multiply-shift hashing a la Dietzfelbinger
  * ***********************************************/
+
+
+  class org_multishift
+{
+#ifdef DEBUG
+  bool hasInit;
+#endif
+uint32_t m_a, m_b;
+  
+ public:
+  org_multishift();
+  uint32_t operator()(uint32_t x);
+  void init(uint32_t x1, uint32_t y1);
+};
+org_multishift::org_multishift()
+{
+
+#ifdef DEBUG
+  hasInit=false;
+#endif
+}
+
+void org_multishift::init(uint32_t x1, uint32_t y1)
+{
+  m_a=x1;
+  m_b=y1;
+  // TODO: Replace with the lines below if using randomgen.h
+  //m_a = getRandomUInt64();
+  //m_b = getRandomUInt64();
+  #ifdef DEBUG
+  hasInit=true;
+  #endif
+}
+
+uint32_t org_multishift::operator()(uint32_t x)
+{
+	uint32_t ret;
+	ret=m_a*x + m_b;
+  return ret;
+}
 class multishift
 {
 #ifdef DEBUG
     bool hasInit;
 #endif
-    uint32_t m_a, m_b;
-    __m256i m_ma, m_mb;
+ uint32_t m_a, m_b;
+   __m256i m_ma, m_mb;
  public:
     multishift();
     __m256i operator()(__m256i th_8);
-    void init();
+    void init(uint32_t c1, uint32_t d1);
 };
 
 multishift::multishift()
@@ -44,13 +84,10 @@ multishift::multishift()
 #endif
 }
 
-void multishift::init()
+void multishift::init(uint32_t c1, uint32_t d1)
 {
-  std::mt19937 rng;
-  rng.seed(std::random_device()());
-  std::uniform_int_distribution<uint64_t> dist;
-  m_a = dist(rng);
-  m_b = dist(rng);
+m_a=c1;
+m_b=d1;
   int arr_a[8],arr_b[8];
   std::fill_n(arr_a,8,m_a);
   std::fill_n(arr_b,8,m_b);
