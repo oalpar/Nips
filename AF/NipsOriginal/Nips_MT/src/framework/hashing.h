@@ -60,8 +60,8 @@ void org_multishift::init(uint32_t x1, uint32_t y1)
 
 uint32_t org_multishift::operator()(uint32_t x)
 {
-	uint32_t ret;
-	ret=m_a*x + m_b;
+  uint32_t ret;
+  ret=m_a*x + m_b;
   return ret;
 }
 class multishift
@@ -69,8 +69,8 @@ class multishift
 #ifdef DEBUG
     bool hasInit;
 #endif
- uint32_t m_a, m_b;
-   __m256i m_ma, m_mb;
+    uint32_t m_a, m_b;
+    __m256i m_ma, m_mb;
  public:
     multishift();
     __m256i operator()(__m256i th_8);
@@ -86,16 +86,16 @@ multishift::multishift()
 
 void multishift::init(uint32_t c1, uint32_t d1)
 {
-m_a=c1;
-m_b=d1;
+  m_a=c1;
+  m_b=d1;
   int arr_a[8],arr_b[8];
   std::fill_n(arr_a,8,m_a);
   std::fill_n(arr_b,8,m_b);
   m_ma= _mm256_load_si256((__m256i *) arr_a);
-    m_mb= _mm256_load_si256((__m256i *) arr_b);
-    // TODO: Replace with the lines below if using randomgen.h
-    //m_a = getRandomUInt64();
-    //m_b = getRandomUInt64();
+  m_mb= _mm256_load_si256((__m256i *) arr_b);
+  // TODO: Replace with the lines below if using randomgen.h
+  //m_a = getRandomUInt64();
+  //m_b = getRandomUInt64();
 #ifdef DEBUG
     hasInit=true;
 #endif
@@ -103,11 +103,11 @@ m_b=d1;
 __m256i multishift::operator()(__m256i th_8)
 {
 #ifdef DEBUG
-    assert(hasInit);
+  assert(hasInit);
 #endif
-   __m256i mxx=_mm256_mullo_epi32(th_8, m_ma);
-   __m256i myy=_mm256_add_epi32(mxx,m_mb);
-    return myy;
+  __m256i mxx=_mm256_mullo_epi32(th_8, m_ma);
+  __m256i myy=_mm256_add_epi32(mxx,m_mb);
+  return myy;
 }
 
 /* ***************************************************
