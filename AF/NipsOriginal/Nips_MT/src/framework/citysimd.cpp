@@ -102,7 +102,7 @@ static const uint32 c1 = 0xcc9e2d51;
 static const uint32 c2 = 0x1b873593;
 
 // A 32-bit to 32-bit integer hash copied from Murmur3.
-static uint32 fmix(uint32 h)
+static __mm256i fmix(uint32 h)
 {
   h ^= h >> 16;
   h *= 0x85ebca6b;
@@ -112,26 +112,26 @@ static uint32 fmix(uint32 h)
   return h;
 }
 
-static uint32 Rotate32(uint32 val, int shift) {
+static __mm256i Rotate32(uint32 val, int shift) {
   // Avoid shifting by 32: doing so yields an undefined result.
   return shift == 0 ? val : ((val >> shift) | (val << (32 - shift)));
 }
 
 
-static uint64 Fetch64(const char *p) {
+__mm256i Fetch64(const char *p) {
   return uint64_in_expected_order(UNALIGNED_LOAD64(p));
 }
 
-static uint32 Fetch32(const char *p) {
+__mm256i Fetch32(const char *p) {
   return uint32_in_expected_order(UNALIGNED_LOAD32(p));
 }
 
-static uint64 HashLen16(uint64 u, uint64 v) {
+__mm256i HashLen16(uint64 u, uint64 v) {
   return Hash128to64(uint128(u, v));
 }
 
 
-static uint64 HashLen16(__m256i u64,__m256i v64, uint64 mul) {
+__mm256i HashLen16(__m256i u64,__m256i v64, uint64 mul) {
   // Murmur-inspired hashing.
   //uint64 a = (u ^ v) * mul;
   //a ^= (a >> 47);
@@ -152,7 +152,7 @@ static uint64 HashLen16(__m256i u64,__m256i v64, uint64 mul) {
   return b2;
 }
 
-static uint64 HashLen0to16(__mm256i reg, __mm256i mm_len) {
+__mm256i HashLen0to16(__mm256i reg, __mm256i mm_len) {
   if (len >= 8) {
     uint64 mul = k2 + len * 2;
     uint64 a = Fetch64(s) + k2;
@@ -185,7 +185,7 @@ static uint64 HashLen0to16(__mm256i reg, __mm256i mm_len) {
 }
 
 
-uint64 CityHash64(__mm256i reg, __mm256i mm_len) {
+__mm256i CityHash64(__mm256i reg, __mm256i mm_len) {
   //if (len <= 32) {
   //if (len <= 16) {
       return HashLen0to16(reg, mm_len);
@@ -197,7 +197,7 @@ uint64 CityHash64(__mm256i reg, __mm256i mm_len) {
   }
 
 
-uint64 CityHash64WithSeeds(__mm256i reg,__mm256i  mm_len,
+__mm 256i CityHash64WithSeeds(__mm256i reg,__mm256i  mm_len,
                            uint64 seed0, uint64 seed1) {
   uint64 arr[4],arr1[4];
   std::fill_n(arr,4,seed1);
@@ -210,7 +210,7 @@ uint64 CityHash64WithSeeds(__mm256i reg,__mm256i  mm_len,
  return HashLen16(x, mm_seed1);
 }
 
-uint64 CityHash64WithSeed(__mm256i reg, size_t len, uint64 seed) { //Starts there
+__mm256i CityHash64WithSeed(__mm256i reg, size_t len, uint64 seed) { //Starts there
   uint64 lenth=len; 
   uint64 arr[4];
   std::fill_n(arr,4,length);
