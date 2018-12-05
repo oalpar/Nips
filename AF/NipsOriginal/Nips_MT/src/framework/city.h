@@ -70,7 +70,7 @@ typedef uint8_t uint8;
 typedef uint32_t uint32;
 typedef uint64_t uint64;
 typedef std::pair<uint64, uint64> uint128;
-
+//not using these
 inline uint64 Uint128Low64(const uint128& x) { return x.first; }
 inline uint64 Uint128High64(const uint128& x) { return x.second; }
 
@@ -98,15 +98,25 @@ uint32 CityHash32(const char *buf, size_t len);
 
 // Hash 128 input bits down to 64 bits of output.
 // This is intended to be a reasonably good hash function.
-inline uint64 Hash128to64(const uint128& x) {
+inline uint64 Hash128to64(__mm256i x, __mm256i seed) {
   // Murmur-inspired hashing.
-  const uint64 kMul = 0x9ddfea08eb382d69ULL;
-  uint64 a = (Uint128Low64(x) ^ Uint128High64(x)) * kMul;
-  a ^= (a >> 47);
-  uint64 b = (Uint128High64(x) ^ a) * kMul;
-  b ^= (b >> 47);
-  b *= kMul;
-  return b;
+ // const uint64 kMul = 0x9ddfea08eb382d69ULL;
+ // uint64 a = (Uint128Low64(x) ^ Uint128High64(x)) * kMul;
+ // a ^= (a >> 47);
+ // uint64 b = (Uint128High64(x) ^ a) * kMul;
+ // b ^= (b >> 47);
+ // b *= kMul;
+  uint64 arr[4];
+  std::fill_n(arr,4,kMul);
+  __m256i mm_kMul= _mm256_load_si256((__m256i *) arr);
+  __m256i a=_mm256_xor_si256(x,seed);
+  __m256i a1=mul64_haswell (a,mm_kMul);
+  __m256i a11=_mm256_slli_epi64(a1,47);
+   __m256i b=_mm256_xor_si256(seed,a11);
+  __m256i b1=mul64_haswell (b,mm_kMul);
+  __m256i b11=_mm256_slli_epi64(b1,47);
+  __m256i b2_=mul64_haswell (b11,mm_kMul);
+  return b2;
 }
 
 #endif  // CITY_HASH_H_

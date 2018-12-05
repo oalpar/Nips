@@ -93,6 +93,9 @@ void testTime(uint32_t trials)
     for (uint32_t i = 0; i < trials; ++i)
       x=hp3(nums[i]);
     end = clock();
+
+
+
     cout << "3-wise PolyHash & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
     
     polyhash hp20;
@@ -110,10 +113,6 @@ void testTime(uint32_t trials)
       x = mm(nums[i]);
     end = clock();
     cout << "MurmurHash3 & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
-    
-
-
-
     citywrap cw;
     cw.init();
     start = clock();
@@ -121,6 +120,10 @@ void testTime(uint32_t trials)
       x = cw(nums[i]);
     end = clock();
     cout << "CityHash & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+    
+
+
+
     blake2wrap b2;
     b2.init();
     start = clock();
