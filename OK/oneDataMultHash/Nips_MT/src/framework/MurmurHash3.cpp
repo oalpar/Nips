@@ -132,16 +132,19 @@ FORCE_INLINE uint64_t fmix64 ( uint64_t k )
 //-----------------------------------------------------------------------------
 
 void MurmurHash3_x86_323 ( const void * key, int len,
-                          uint32_t seed, void * out )
+                          __m256i seed, void * out )
 {
   const uint8_t * data = (const uint8_t*)key;
   const int nblocks = len / 4;
  
-  uint32_t h1 = seed;
-  __m256i m_h1=_mm256_set1_epi32(seed);
-  const uint32_t c1 = 0xcc9e2d51;
+
+//  __m256i m_h1=_mm256_set1_epi32(seed);
+__m256i m_h1=seed;  
+const uint32_t c1 = 0xcc9e2d51;
   
   __m256i m_c1=_mm256_set1_epi32 (c1);
+
+
 
 
   const uint32_t c2 = 0x1b873593;
@@ -209,7 +212,7 @@ cout << "*********************************************************" << endl;
   case 3: k1 ^= tail[2] << 16;
   case 2: k1 ^= tail[1] << 8;
   case 1: k1 ^= tail[0];
-          k1 *= c1; k1 = ROTL32(k1,15); k1 *= c2; h1 ^= k1;
+        //  k1 *= c1; k1 = ROTL32(k1,15); k1 *= c2; h1 ^= k1;
   };
 
   //----------
