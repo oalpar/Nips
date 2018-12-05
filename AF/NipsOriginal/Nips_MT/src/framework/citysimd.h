@@ -70,17 +70,17 @@ typedef std::pair<uint64, uint64> uint128;
 //not using these
 
 
-__mm256i City_Hash64WithSeed(__mm256i reg, size_t len, uint64 seed) ;
-__mm 256i CityHash64WithSeeds(__mm256i reg,__mm256i  mm_len, uint64 seed0, uint64 seed1);
-__mm256i CityHash64(__mm256i reg, __mm256i mm_len);
-__mm256i HashLen0to16(__mm256i reg, __mm256i mm_len);
-__mm256i HashLen16(__m256i u64,__m256i v64, uint64 mul);
-static __mm256i Rotate32(uint32 val, int shift) ;
+__mm256i CitysimdHash64WithSeed(__mm256i reg, size_t len, uint64 seed) ;
+__mm256i CitysimdHash64WithSeeds(__mm256i reg,__mm256i  mm_len, uint64 seed0, uint64 seed1);
+__mm256i CitysimdHash64(__mm256i reg, __mm256i mm_len);
+__mm256i simdHashLen0to16(__mm256i reg, __mm256i mm_len);
+__mm256i simdHashLen16(__m256i u64,__m256i v64, uint64 mul);
+static __mm256i simdRotate32(uint32 val, int shift) ;
  //Starts there
 
 // Hash 128 input bits down to 64 bits of output.
 // This is intended to be a reasonably good hash function.
-inline __m256i Hash128to64(__mm256i x, __mm256i seed){
+inline __m256i simdHash128to64(__mm256i x, __mm256i seed){
   // Murmur-inspired hashing.
  // const uint64 kMul = 0x9ddfea08eb382d69ULL;
  // uint64 a = (Uint128Low64(x) ^ Uint128High64(x)) * kMul;

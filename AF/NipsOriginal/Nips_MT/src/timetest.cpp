@@ -111,7 +111,27 @@ void testTime(uint32_t trials)
     end = clock();
     cout << "MurmurHash3 & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
     
-
+	s_citywrap scw;
+	scw.init();
+	
+  uint32_t *hashed1 = new uint32_t[trials];
+    //uint32_t hashedc[8];
+    //uint32_t hashed;
+    
+    clock_t start = clock();
+    for(int j = 0; j < trials; j+=8) {
+      __m256i vec;
+      uint32_t vecset1[8] = {nums[j],nums[j+1],nums[j+2],nums[j+3],nums[j+4],nums[j+5],nums[j+6],nums[j+7]};
+      
+      
+      vec1 = _mm256_load_si256((__m256i*)vecset1);
+      __m256i test1=scw(vec1);
+      for(int k = 0; k < 8; k++) {
+	hashed1[j+k] = _mm256_extract_epi32(test,k);
+	//cout << "Index: " <<j+k << " Val: " << hashed[j+k] << endl; 
+      }	  
+    }
+    
 
 
     citywrap cw;

@@ -16,7 +16,7 @@
 #include "blake2-impl.h"
 
 #include "city.h"
-
+#include "citysimd.h"
 /* *************************************************************
  * Wrapper for MurMurHash similar to the rest
  * *************************************************************/
@@ -110,7 +110,34 @@ void citywrap::init()
 uint32_t citywrap::operator()(uint32_t x)
 {
     uint32_t h;
-    h = (uint32_t)CityHash64WithSeed((const char *)&x, 4, m_seed);
+    h = (uint32_t)CitysimdHash64WithSeed((const char *)&x, 4, m_seed);
+    return h;
+}
+class s_citywrap
+{
+    uint64_t m_seed;
+public:
+    s_citywrap();
+    void init();
+    uint32_t operator()(uint32_t x);
+};
+
+s_citywrap::s_citywrap() { }
+
+void s_citywrap::init()
+{
+    std::mt19937 rng;
+    rng.seed(std::random_device()());
+    std::uniform_int_distribution<uint64_t> dist;
+    m_seed = dist(rng);
+    // TODO: Replace with the line below if using randomgen.h
+    //m_seed = getRandomUInt64();
+}
+
+uint32_t s_citywrap::operator()(__mm256i x)
+{
+    __mm256i h;
+    h = CitysimdHash64WithSeed(x, 4, m_seed);
     return h;
 }
 

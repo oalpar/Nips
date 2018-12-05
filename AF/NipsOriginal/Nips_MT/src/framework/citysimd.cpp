@@ -80,15 +80,15 @@ __m256i mul64_haswell (__m256i a, __m256i b) {
 #endif
 #endif
 
-static uint64 ShiftMix(uint64 val) { // <3
+static uint64 simdShiftMix(uint64 val) { // <3
   return val ^ (val >> 47);
 }
 
-static uint64 Fetch64(const char *p) {
+static uint64 simdFetch64(const char *p) {
   return uint64_in_expected_order(UNALIGNED_LOAD64(p));
 }
 
-static uint32 Fetch32(const char *p) {
+static uint32 simdFetch32(const char *p) {
   return uint32_in_expected_order(UNALIGNED_LOAD32(p));
 }
 
@@ -102,7 +102,7 @@ static const uint32 c1 = 0xcc9e2d51;
 static const uint32 c2 = 0x1b873593;
 
 // A 32-bit to 32-bit integer hash copied from Murmur3.
-static __mm256i fmix(uint32 h)
+static __mm256i simdfmix(uint32 h)
 {
   h ^= h >> 16;
   h *= 0x85ebca6b;
@@ -112,26 +112,26 @@ static __mm256i fmix(uint32 h)
   return h;
 }
 
-static __mm256i Rotate32(uint32 val, int shift) {
+static __mm256i simdRotate32(uint32 val, int shift) {
   // Avoid shifting by 32: doing so yields an undefined result.
   return shift == 0 ? val : ((val >> shift) | (val << (32 - shift)));
 }
 
 
-__mm256i Fetch64(const char *p) {
+__mm256i simdFetch64(const char *p) {
   return uint64_in_expected_order(UNALIGNED_LOAD64(p));
 }
 
-__mm256i Fetch32(const char *p) {
+__mm256i simdFetch32(const char *p) {
   return uint32_in_expected_order(UNALIGNED_LOAD32(p));
 }
 
-__mm256i HashLen16(uint64 u, uint64 v) {
-  return Hash128to64(uint128(u, v));
+__mm256i simdHashLen16(uint64 u, uint64 v) {
+  return simdHash128to64(uint128(u, v));
 }
 
 
-__mm256i HashLen16(__m256i u64,__m256i v64, uint64 mul) {
+__mm256i simdHashLen16(__m256i u64,__m256i v64, uint64 mul) {
   // Murmur-inspired hashing.
   //uint64 a = (u ^ v) * mul;
   //a ^= (a >> 47);
@@ -152,14 +152,14 @@ __mm256i HashLen16(__m256i u64,__m256i v64, uint64 mul) {
   return b2;
 }
 
-__mm256i HashLen0to16(__mm256i reg, __mm256i mm_len) {
+__mm256i simdHashLen0to16(__mm256i reg, __mm256i mm_len) {
   if (len >= 8) {
     uint64 mul = k2 + len * 2;
-    uint64 a = Fetch64(s) + k2;
-    uint64 b = Fetch64(s + len - 8);
-    uint64 c = Rotate(b, 37) * mul + a;
-    uint64 d = (Rotate(a, 25) + b) * mul;
-    return HashLen16(c, d, mul);
+    uint64 a = simdFetch64(s) + k2;
+    uint64 b = simdFetch64(s + len - 8);
+    uint64 c = simdRotate(b, 37) * mul + a;
+    uint64 d = (simdRotate(a, 25) + b) * mul;
+    return simdHashLen16(c, d, mul);
   }
   if (len >= 4) {
     uint64 mul = k2 + len * 2;
@@ -171,7 +171,7 @@ __mm256i HashLen0to16(__mm256i reg, __mm256i mm_len) {
     __mm256i t1=_mm256_add_epi64(t, mm_len);
     __mm256i len_4=_mm256_sub_epi64 (Ãmm_len, a4)
     // return HashLen16(len+ (a<<3), Fetch32(s + len - 4), mul);
-    return HashLen16(t1,len_4,mul)
+    return simdHashLen16(t1,len_4,mul)
   }
   if (len > 0) {
     uint8 a = s[0];
@@ -179,16 +179,16 @@ __mm256i HashLen0to16(__mm256i reg, __mm256i mm_len) {
     uint8 c = s[len - 1];
     uint32 y = static_cast<uint32>(a) + (static_cast<uint32>(b) << 8);
     uint32 z = len + (static_cast<uint32>(c) << 2);
-    return ShiftMix(y * k2 ^ z * k0) * k2;
+    return simdShiftMix(y * k2 ^ z * k0) * k2;
   }
   return k2;
 }
 
 
-__mm256i CityHash64(__mm256i reg, __mm256i mm_len) {
+__mm256i simdCityHash64(__mm256i reg, __mm256i mm_len) {
   //if (len <= 32) {
   //if (len <= 16) {
-      return HashLen0to16(reg, mm_len);
+      return simdHashLen0to16(reg, mm_len);
       //} else {
       //return HashLen17to32(s, len);
       //}
@@ -197,26 +197,26 @@ __mm256i CityHash64(__mm256i reg, __mm256i mm_len) {
   }
 
 
-__mm 256i CityHash64WithSeeds(__mm256i reg,__mm256i  mm_len,
+__mm256i CityHash64WithSeeds(__mm256i reg,__mm256i  mm_len,
                            uint64 seed0, uint64 seed1) {
   uint64 arr[4],arr1[4];
   std::fill_n(arr,4,seed1);
   __mm256i mm_seed1= _mm256_load_si256((__m256i *) arr);
   std::fill_n(arr1,4,seed0);
   __mm256i mm_seed0= _mm256_load_si256((__m256i *) arr1);
-  __mm256ix =CityHash64(reg,mm_len)
+  __mm256ix =simdCityHash64(reg,mm_len)
   __mm256i x1=_mm256_sub_epi64 (x,mm_seed0)
 
- return HashLen16(x, mm_seed1);
+ return simdHashLen16(x, mm_seed1);
 }
 
-__mm256i CityHash64WithSeed(__mm256i reg, size_t len, uint64 seed) { //Starts there
+__mm256i CitysimdHash64WithSeed(__mm256i reg, size_t len, uint64 seed) { //Starts there
   uint64 lenth=len; 
   uint64 arr[4];
   std::fill_n(arr,4,length);
    __mm256i mm_len= _mm256_load_si256((__m256i *) arr);
  
-  return CityHash64WithSeeds(reg, mm_len, k2, seed);
+  return CitysimdHash64WithSeeds(reg, mm_len, k2, seed);
 }
 
 
