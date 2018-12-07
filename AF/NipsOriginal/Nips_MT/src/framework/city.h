@@ -65,6 +65,9 @@
 #include <stdlib.h>  // for size_t.
 #include <stdint.h>
 #include <utility>
+#include <immintrin.h>
+
+using namespace std;
 
 typedef uint8_t uint8;
 typedef uint32_t uint32;
@@ -98,16 +101,44 @@ uint32 CityHash32(const char *buf, size_t len);
 
 // Hash 128 input bits down to 64 bits of output.
 // This is intended to be a reasonably good hash function.
-inline uint64 Hash128to64(__mm256i x, __mm256i seed) {
+
+__m256i CitysimdHash64WithSeeds(__m256i reg,__m256i  mm_len, uint64 seed0, uint64 seed1);
+__m256i CitysimdHash64(__m256i reg, __m256i mm_len);
+__m256i simdHashLen0to16(__m256i reg, __m256i mm_len);
+__m256i simdHashLen16(__m256i u64,__m256i v64, uint64 mul);
+static __m256i simdRotate32(uint32 val, int shift);
+__m256i CitysimdHash64WithSeed(__m256i reg, size_t len, uint64_t seed);
+ //Starts there
+__m256i mul64_haswell (__m256i a, __m256i b) {
+    // instruction does not exist. Split into 32-bit multiplies
+    __m256i bswap   = _mm256_shuffle_epi32(b,0xB1);           // swap H<->L
+    __m256i prodlh  = _mm256_mullo_epi32(a,bswap);            // 32 bit L*H products
+
+    // or use pshufb instead of psrlq to reduce port0 pressure on Haswell
+    __m256i prodlh2 = _mm256_srli_epi64(prodlh, 32);          // 0  , a0Hb0L,          0, a1Hb1L
+    __m256i prodlh3 = _mm256_add_epi32(prodlh2, prodlh);      // xxx, a0Lb0H+a0Hb0L, xxx, a1Lb1H+a1Hb1L
+    __m256i prodlh4 = _mm256_and_si256(prodlh3, _mm256_set1_epi64x(0x00000000FFFFFFFF)); // zero high halves
+
+    __m256i prodll  = _mm256_mul_epu32(a,b);                  // a0Lb0L,a1Lb1L, 64 bit unsigned products
+    __m256i prod    = _mm256_add_epi64(prodll,prodlh4);       // a0Lb0L+(a0Lb0H+a0Hb0L)<<32, a1Lb1L+(a1Lb1H+a1Hb1L)<<32
+    return  prod;
+}
+// Hash 128 input bits down to 64 bits of output.
+// This is intended to be a reasonably good hash function.
+__m256i simdHash128to64(__m256i x, __m256i seed){
   // Murmur-inspired hashing.
- // const uint64 kMul = 0x9ddfea08eb382d69ULL;
- // uint64 a = (Uint128Low64(x) ^ Uint128High64(x)) * kMul;
+ const uint64 kMul = 0x9ddfea08eb382d69ULL;
+  
+// uint64 a = (Uint128Low64(x) ^ Uint128High64(x)) * kMul;
  // a ^= (a >> 47);
  // uint64 b = (Uint128High64(x) ^ a) * kMul;
  // b ^= (b >> 47);
  // b *= kMul;
   uint64 arr[4];
-  std::fill_n(arr,4,kMul);
+  for(int i=0; i<4;i++)
+	{
+	arr[i]=kMul;
+	}
   __m256i mm_kMul= _mm256_load_si256((__m256i *) arr);
   __m256i a=_mm256_xor_si256(x,seed);
   __m256i a1=mul64_haswell (a,mm_kMul);
@@ -115,8 +146,17 @@ inline uint64 Hash128to64(__mm256i x, __mm256i seed) {
    __m256i b=_mm256_xor_si256(seed,a11);
   __m256i b1=mul64_haswell (b,mm_kMul);
   __m256i b11=_mm256_slli_epi64(b1,47);
-  __m256i b2_=mul64_haswell (b11,mm_kMul);
+  __m256i b2=mul64_haswell (b11,mm_kMul);
   return b2;
 }
-
+inline uint64 Hash128to64(const uint128& x) {
+  // Murmur-inspired hashing.
+  const uint64 kMul = 0x9ddfea08eb382d69ULL;
+  uint64 a = (Uint128Low64(x) ^ Uint128High64(x)) * kMul;
+  a ^= (a >> 47);
+  uint64 b = (Uint128High64(x) ^ a) * kMul;
+  b ^= (b >> 47);
+  b *= kMul;
+  return b;
+}
 #endif  // CITY_HASH_H_

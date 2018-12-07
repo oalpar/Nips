@@ -14,9 +14,8 @@
 #include "MurmurHash3.h"
 #include "blake2.h"
 #include "blake2-impl.h"
-
 #include "city.h"
-#include "citysimd.h"
+
 /* *************************************************************
  * Wrapper for MurMurHash similar to the rest
  * *************************************************************/
@@ -92,7 +91,7 @@ class citywrap
 public:
     citywrap();
     void init();
-    uint32_t operator()(uint32_t x);
+    uint32_t operator()(uint32_t x1);
 };
 
 citywrap::citywrap() { }
@@ -107,19 +106,20 @@ void citywrap::init()
     //m_seed = getRandomUInt64();
 }
 
-uint32_t citywrap::operator()(uint32_t x)
+uint32_t citywrap::operator()(uint32_t x1)
 {
     uint32_t h;
-    h = (uint32_t)CitysimdHash64WithSeed((const char *)&x, 4, m_seed);
+    h = (uint32_t)CityHash64WithSeed((const char *)&x1, 4, m_seed);
     return h;
 }
+
 class s_citywrap
 {
     uint64_t m_seed;
 public:
     s_citywrap();
     void init();
-    uint32_t operator()(uint32_t x);
+    __m256i operator ()(__m256i x);
 };
 
 s_citywrap::s_citywrap() { }
@@ -134,11 +134,12 @@ void s_citywrap::init()
     //m_seed = getRandomUInt64();
 }
 
-uint32_t s_citywrap::operator()(__mm256i x)
+__m256i s_citywrap::operator () (__m256i x)
 {
-    __mm256i h;
+    __m256i h;
     h = CitysimdHash64WithSeed(x, 4, m_seed);
     return h;
 }
 
-#endif //_HASHING_MORE_H_
+#endif 
+//_HASHING_MORE_H_
