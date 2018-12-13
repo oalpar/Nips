@@ -38,3 +38,6 @@ MurmurHash3 & 101.062s \\
 MurmurHash3 SIMD & 26.9685s \\
 MurmurHash3 & 106.414s \\
 MurmurHash3 SIMD & 28.344s \\
+MurmurHash3 & 115.04s \\
+MurmurHash3 SIMD & 32.5487s \\
+MurmurHash3 & 120.736s \\
