@@ -644,7 +644,51 @@ uint128 CityHashCrc128(const char *s, size_t len) {
   }
 }
 
+__m256i mul64_haswell (__m256i a, __m256i b) {
+    // instruction does not exist. Split into 32-bit multiplies
+    __m256i bswap   = _mm256_shuffle_epi32(b,0xB1);           // swap H<->L
+    __m256i prodlh  = _mm256_mullo_epi32(a,bswap);            // 32 bit L*H products
 
+    // or use pshufb instead of psrlq to reduce port0 pressure on Haswell
+    __m256i prodlh2 = _mm256_srli_epi64(prodlh, 32);          // 0  , a0Hb0L,          0, a1Hb1L
+    __m256i prodlh3 = _mm256_add_epi32(prodlh2, prodlh);      // xxx, a0Lb0H+a0Hb0L, xxx, a1Lb1H+a1Hb1L
+    __m256i prodlh4 = _mm256_and_si256(prodlh3, _mm256_set1_epi64x(0x00000000FFFFFFFF)); // zero high halves
+
+    __m256i prodll  = _mm256_mul_epu32(a,b);                  // a0Lb0L,a1Lb1L, 64 bit unsigned products
+    __m256i prod    = _mm256_add_epi64(prodll,prodlh4);       // a0Lb0L+(a0Lb0H+a0Hb0L)<<32, a1Lb1L+(a1Lb1H+a1Hb1L)<<32
+    return  prod;
+}
+// Hash 128 input bits down to 64 bits of output.
+// This is intended to be a reasonably good hash function.
+__m256i simdHash128to64(__m256i x, __m256i seed){
+  // Murmur-inspired hashing.
+ const uint64 kMul = 0x9ddfea08eb382d69ULL;
+  
+// uint64 a = (Uint128Low64(x) ^ Uint128High64(x)) * kMul;
+ // a ^= (a >> 47);
+ // uint64 b = (Uint128High64(x) ^ a) * kMul;
+ // b ^= (b >> 47);
+ // b *= kMul;
+  uint64 arr[4];
+  for(int i=0; i<4;i++)
+	{
+	arr[i]=kMul;
+	}
+  __m256i mm_kMul= _mm256_load_si256((__m256i *) arr);
+  __m256i a=_mm256_xor_si256(x,seed);
+  __m256i a1=mul64_haswell (a,mm_kMul);
+  __m256i a11=_mm256_slli_epi64(a1,47);
+   __m256i b=_mm256_xor_si256(seed,a11);
+  __m256i b1=mul64_haswell (b,mm_kMul);
+  __m256i b11=_mm256_slli_epi64(b1,47);
+  __m256i b2=mul64_haswell (b11,mm_kMul);
+  return b2;
+}
+
+__m256i simdHashLen16(__m256i x1, __m256i mm_seed1) {
+  __m256i h =simdHash128to64(x1, mm_seed1);
+  return h;
+}
 
 __m256i simdHashLen16(__m256i u64,__m256i v64, uint64 mul) {
   // Murmur-inspired hashing.
@@ -705,7 +749,7 @@ __m256i CitysimdHash64WithSeeds(__m256i reg,__m256i  mm_len,
   __m256i x =simdCityHash64(reg,mm_len);
   __m256i x1=_mm256_sub_epi64 (x,mm_seed0);
 
- return simdHashLen16(x, mm_seed1);
+ return simdHashLen16(x1, mm_seed1);
 }
 
 __m256i CitysimdHash64WithSeed(__m256i reg, size_t len, uint64_t seed) { //Starts there

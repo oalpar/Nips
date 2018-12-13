@@ -119,22 +119,15 @@ void testTime(uint32_t trials)
     //uint32_t hashed;
 
     start = clock();
-
-	 __m256i vec1;
     for(int j = 0; j < trials; j+=4) {
-      
+      __m256i vec1;
       uint64 vecset1[4] = {nums[j],nums[j+1],nums[j+2],nums[j+3]};
      vec1 = _mm256_loadu_si256((__m256i*)vecset1);
      __m256i test1=scw(vec1);
-      
-//	hashed1[j] = _mm256_extract_epi64(test1,0);
-//	cout << "Index: " <<j << " Val: " << hashed1[j] << endl;
-//	 hashed1[j+1] = _mm256_extract_epi64(test1,1);
-    //    cout << "Index: " <<j+1 << " Val: " << hashed1[j+1] << endl;
-//	 hashed1[j+2] = _mm256_extract_epi64(test1,2);
-  //      cout << "Index: " <<j+2 << " Val: " << hashed1[j+2] << endl;
-//	 hashed1[j+3] = _mm256_extract_epi64(test1,3);
-//        cout << "Index: " <<j+3 << " Val: " << hashed1[j+3] << endl;
+      for(int k = 0; k < 4; k++) {
+	//hashed1[j+k] = _mm256_extract_epi64(test1,k);
+	//cout << "Index: " <<j+k << " Val: " << hashed1[j+k] << endl; 
+      }
     }
     end = clock();
     cout << "CityHash with simd & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
