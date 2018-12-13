@@ -8,14 +8,14 @@
 #include <random>
 using namespace std;
 
-int main(){
+int main(int argv, char** argc){
   volatile uint32_t x;
   volatile __m256i x1;
   
   mt19937 rng;
   rng.seed(random_device()());
   uniform_int_distribution<uint32_t> dist;
-  uint32_t trials= 1 ;
+  uint32_t trials=2<< stoi(argc[1]) ;
   vector<uint32_t> nums;
   for (uint32_t i = 0; i < trials; ++i)
     nums.push_back(dist(rng));
@@ -33,8 +33,7 @@ int main(){
   clock_t end = clock();
   cout << "MurmurHash3 & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
   
-  cout<< "Last element with MurmurNoSIMD is " << x << endl;
-    
+  
   murmurwrap mmSIMD;
   __m256i murmur;
   const uint32_t* q;
@@ -47,7 +46,7 @@ int main(){
       x1=mmSIMD(murmur);
       
       q=(const uint32_t *)  & x1;
-      
+      /*
       xsimd[0] = _mm256_extract_epi32(x1, 0);
       xsimd[1] = _mm256_extract_epi32(x1, 1);
       xsimd[2] = _mm256_extract_epi32(x1, 2);
@@ -56,7 +55,7 @@ int main(){
       xsimd[5] = _mm256_extract_epi32(x1, 5);
       xsimd[6] = _mm256_extract_epi32(x1, 6);
       xsimd[7] = _mm256_extract_epi32(x1, 7);
-      
+    */  
       //       for(int p=0;p<8;p++){
       //cout <<(x1[p] == nums2[p+i]) << endl;
 	 // cout << "Simd: hello "<< xsimd[p] <<endl;
@@ -64,8 +63,7 @@ int main(){
     }
     end = clock();
     cout << "MurmurHash3 SIMD & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
-    cout<< "Last element with MurmurSIMD is " << xsimd[7] << endl;
-    return 0;
+       return 0;
 }
 
 

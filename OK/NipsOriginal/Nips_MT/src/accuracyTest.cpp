@@ -33,8 +33,7 @@ int main(int argc, char *argv[]){
   clock_t end = clock();
   cout << "MurmurHash3 & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
   
-  cout<< "Last element with MurmurNoSIMD is " << x << endl;
-    
+      
   murmurwrap mmSIMD;
   __m256i murmur;
   const uint32_t* q;
@@ -57,15 +56,7 @@ int main(int argc, char *argv[]){
       
       q=(const uint32_t *)  & x1;
       
-      xsimd[0] = _mm256_extract_epi32(x1, 0);
-      xsimd[1] = _mm256_extract_epi32(x1, 1);
-      xsimd[2] = _mm256_extract_epi32(x1, 2);
-      xsimd[3] = _mm256_extract_epi32(x1, 3);
-      xsimd[4] = _mm256_extract_epi32(x1, 4);
-      xsimd[5] = _mm256_extract_epi32(x1, 5);
-      xsimd[6] = _mm256_extract_epi32(x1, 6);
-      xsimd[7] = _mm256_extract_epi32(x1, 7);
-      
+          
       //       for(int p=0;p<8;p++){
       //cout <<(x1[p] == nums2[p+i]) << endl;
 	 // cout << "Simd: hello "<< xsimd[p] <<endl;
@@ -73,8 +64,7 @@ int main(int argc, char *argv[]){
     }
     end = clock();
     cout << "MurmurHash3 SIMD & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
-    cout<< "Last element with MurmurSIMD is " << xsimd[7] << endl;
-    return 0;
+     return 0;
 }
 
 
