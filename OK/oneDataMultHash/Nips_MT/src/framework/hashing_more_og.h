@@ -47,13 +47,10 @@ uint32_t murmurwrap1::operator()(uint32_t x)
 {
     //comment this out if working for real
     uint32_t h;
-	std::cout<<"results:"<<std::endl;
 for(int j=0; j<8; j++){
     m_seed=seeds[j];
 	MurmurHash3_x86_32(&x, 4, m_seed, &h);
-	std::cout<<h<<std::endl;
     }
-	std::cout<<"result end for 1 data"<<std::endl;
 	return h;
 }
 
@@ -90,20 +87,7 @@ __m256i murmurwrap::operator()(__m256i x)
     MurmurHash3_x86_323(&x, 4, m_seed1, &h);
     uint32_t xsimd[8];
 
-   xsimd[0] = _mm256_extract_epi32(h, 0);
-      xsimd[1] = _mm256_extract_epi32(h, 1);
-      xsimd[2] = _mm256_extract_epi32(h, 2);
-      xsimd[3] = _mm256_extract_epi32(h, 3);
-      xsimd[4] = _mm256_extract_epi32(h, 4);
-      xsimd[5] = _mm256_extract_epi32(h, 5);
-      xsimd[6] = _mm256_extract_epi32(h, 6);
-      xsimd[7] = _mm256_extract_epi32(h, 7);
-	std::cout<<"simdified result"<<std::endl;	
-for(int k=0; k<8;k++){
-	std::cout<<xsimd[k]<<std::endl;
-	}
-	std::cout<<"simdfied result end"<<std::endl;
-
+   
     return h;
 }
 

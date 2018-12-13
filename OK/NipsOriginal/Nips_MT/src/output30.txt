@@ -1,0 +1,100 @@
+MurmurHash3 & 15.3168s \\
+MurmurHash3 SIMD & 4.33151s \\
+MurmurHash3 & 15.0651s \\
+MurmurHash3 SIMD & 4.42269s \\
+MurmurHash3 & 16.2217s \\
+MurmurHash3 SIMD & 4.35028s \\
+MurmurHash3 & 16.2262s \\
+MurmurHash3 SIMD & 4.62748s \\
+MurmurHash3 & 16.6208s \\
+MurmurHash3 SIMD & 4.88904s \\
+MurmurHash3 & 19.1183s \\
+MurmurHash3 SIMD & 5.04856s \\
+MurmurHash3 & 18.8604s \\
+MurmurHash3 SIMD & 5.53877s \\
+MurmurHash3 & 13.6718s \\
+MurmurHash3 SIMD & 3.91945s \\
+MurmurHash3 & 14.8106s \\
+MurmurHash3 SIMD & 3.74918s \\
+MurmurHash3 & 13.8535s \\
+MurmurHash3 SIMD & 3.71582s \\
+MurmurHash3 & 13.8126s \\
+MurmurHash3 SIMD & 3.73506s \\
+MurmurHash3 & 13.8984s \\
+MurmurHash3 SIMD & 4.57698s \\
+MurmurHash3 & 14.5688s \\
+MurmurHash3 SIMD & 3.9169s \\
+MurmurHash3 & 14.5717s \\
+MurmurHash3 SIMD & 3.92933s \\
+MurmurHash3 & 14.5608s \\
+MurmurHash3 SIMD & 3.95425s \\
+MurmurHash3 & 15.7761s \\
+MurmurHash3 SIMD & 4.27855s \\
+MurmurHash3 & 15.8077s \\
+MurmurHash3 SIMD & 4.27264s \\
+MurmurHash3 & 15.7924s \\
+MurmurHash3 SIMD & 4.23263s \\
+MurmurHash3 & 18.6209s \\
+MurmurHash3 SIMD & 4.89041s \\
+MurmurHash3 & 18.6838s \\
+MurmurHash3 SIMD & 4.98013s \\
+MurmurHash3 & 14.4631s \\
+MurmurHash3 SIMD & 3.64149s \\
+MurmurHash3 & 14.8144s \\
+MurmurHash3 SIMD & 3.76487s \\
+MurmurHash3 & 14.8397s \\
+MurmurHash3 SIMD & 4.26506s \\
+MurmurHash3 & 19.5765s \\
+MurmurHash3 SIMD & 5.02508s \\
+MurmurHash3 & 15.2976s \\
+MurmurHash3 SIMD & 3.90063s \\
+MurmurHash3 & 13.6101s \\
+MurmurHash3 SIMD & 3.74683s \\
+MurmurHash3 & 13.8896s \\
+MurmurHash3 SIMD & 3.73344s \\
+MurmurHash3 & 13.9418s \\
+MurmurHash3 SIMD & 3.68163s \\
+MurmurHash3 & 13.8026s \\
+MurmurHash3 SIMD & 3.7071s \\
+MurmurHash3 & 16.0408s \\
+MurmurHash3 SIMD & 4.45402s \\
+MurmurHash3 & 14.5592s \\
+MurmurHash3 SIMD & 3.95753s \\
+MurmurHash3 & 14.4878s \\
+MurmurHash3 SIMD & 3.93363s \\
+MurmurHash3 & 14.548s \\
+MurmurHash3 SIMD & 4.27018s \\
+MurmurHash3 & 15.789s \\
+MurmurHash3 SIMD & 4.24872s \\
+MurmurHash3 & 15.8772s \\
+MurmurHash3 SIMD & 4.26946s \\
+MurmurHash3 & 15.8374s \\
+MurmurHash3 SIMD & 4.28133s \\
+MurmurHash3 & 18.4857s \\
+MurmurHash3 SIMD & 5.61773s \\
+MurmurHash3 & 19.217s \\
+MurmurHash3 SIMD & 5.09348s \\
+MurmurHash3 & 13.9054s \\
+MurmurHash3 SIMD & 3.6729s \\
+MurmurHash3 & 14.5191s \\
+MurmurHash3 SIMD & 4.17517s \\
+MurmurHash3 & 13.8456s \\
+MurmurHash3 SIMD & 3.76654s \\
+MurmurHash3 & 13.9433s \\
+MurmurHash3 SIMD & 3.66896s \\
+MurmurHash3 & 13.8172s \\
+MurmurHash3 SIMD & 3.75707s \\
+MurmurHash3 & 15.9615s \\
+MurmurHash3 SIMD & 3.9452s \\
+MurmurHash3 & 14.5472s \\
+MurmurHash3 SIMD & 3.93909s \\
+MurmurHash3 & 14.5195s \\
+MurmurHash3 SIMD & 3.93773s \\
+MurmurHash3 & 15.7635s \\
+MurmurHash3 SIMD & 4.26281s \\
+MurmurHash3 & 15.7661s \\
+MurmurHash3 SIMD & 4.23154s \\
+MurmurHash3 & 15.7332s \\
+MurmurHash3 SIMD & 4.19927s \\
+MurmurHash3 & 18.3967s \\
+MurmurHash3 SIMD & 4.91789s \\
