@@ -10,7 +10,7 @@
 // TODO: If you have a seed of random bytes you should place it in the seed
 // directory and use randomgen.h instead!
 #include <random> // TODO: Replace with #include "randomgen.h"
-
+#include <immintrin.h>
 #include "MurmurHash3.h"
 #include "blake2.h"
 #include "blake2-impl.h"
@@ -116,28 +116,43 @@ uint32_t citywrap::operator()(uint32_t x1)
 class s_citywrap
 {
     uint64_t m_seed;
+	__m256i mm_seed1;
+	
 public:
     s_citywrap();
-    void init();
+    void init(int);
     __m256i operator ()(__m256i x);
 };
 
 s_citywrap::s_citywrap() { }
 
-void s_citywrap::init()
+void s_citywrap::init(int m)
 {
-    std::mt19937 rng;
+	
+	std::mt19937 rng;
     rng.seed(std::random_device()());
     std::uniform_int_distribution<uint64_t> dist;
-    m_seed = dist(rng);
-    // TODO: Replace with the line below if using randomgen.h
-    //m_seed = getRandomUInt64();
+	uint64 arr[4];
+    if (m==1){
+	m_seed = dist(rng);
+	 std::fill_n(arr,4,m_seed);
+	mm_seed1= _mm256_load_si256((__m256i *) arr);
+	}
+	else
+	{
+	for(int i=0; i<4;i++)
+		{
+		m_seed = dist(rng);
+		arr[i]=m_seed;
+		}
+	mm_seed1= _mm256_load_si256((__m256i *) arr);
+	}
 }
 
 __m256i s_citywrap::operator () (__m256i x)
 {
     __m256i h;
-    h = CitysimdHash64WithSeed(x, 4, m_seed);
+    h = CitysimdHash64WithSeed(x, 4, mm_seed1);
     return h;
 }
 

@@ -6,14 +6,14 @@ CTC			= framework/city.cc
 
 default : all
 
-all : testtime
+all : test_city
 
 
-testtime : timetest.cpp
-	${CC} ${CPPFLAGS} timetest.cpp ${MM} ${B2} ${CTC} -o testtime
+test_city : test_city.cpp
+	${CC} ${CPPFLAGS} test_city.cpp ${MM} ${B2} ${CTC} -o test_city
 
 
 clean :
-	rm -f testtime 
+	rm -f test_city
 	rm -f *.o
 	rm -f *.exe

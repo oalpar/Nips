@@ -51,9 +51,7 @@ void testTime(uint32_t trials)
     cout << "Original Multiply-shift: " << (float)(end2-start2)/CLOCKS_PER_SEC << "s \\\\" << endl;
     
     
-    uint32_t *hashed = new uint32_t[trials];
-    //uint32_t hashedc[8];
-    //uint32_t hashed;
+    
     
     clock_t start = clock();
     for(int j = 0; j < trials; j+=8) {
@@ -65,7 +63,7 @@ void testTime(uint32_t trials)
       __m256i test=hms(vec);
       for(int k = 0; k < 8; k++) {
 	hashed[j+k] = _mm256_extract_epi32(test,k);
-	//cout << "Index: " <<j+k << " Val: " << hashed[j+k] << endl; 
+	
       }	  
     }
     
@@ -112,7 +110,7 @@ void testTime(uint32_t trials)
     cout << "MurmurHash3 & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
     
 	s_citywrap scw;
-	scw.init();
+	scw.init(1);
 	
   uint64 *hashed1 = new uint64[trials];
     //uint32_t hashedc[8];

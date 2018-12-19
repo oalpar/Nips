@@ -102,12 +102,12 @@ uint32 CityHash32(const char *buf, size_t len);
 // Hash 128 input bits down to 64 bits of output.
 // This is intended to be a reasonably good hash function.
 
-__m256i CitysimdHash64WithSeeds(__m256i reg,__m256i  mm_len, uint64 seed0, uint64 seed1);
+__m256i CitysimdHash64WithSeeds(__m256i reg,__m256i  mm_len, __m256i seed0, uint64 seed1);
 __m256i CitysimdHash64(__m256i reg, __m256i mm_len);
 __m256i simdHashLen0to16(__m256i reg, __m256i mm_len);
 __m256i simdHashLen16(__m256i u64,__m256i v64, uint64 mul);
 static __m256i simdRotate32(uint32 val, int shift);
-__m256i CitysimdHash64WithSeed(__m256i reg, size_t len, uint64_t seed);
+__m256i CitysimdHash64WithSeed(__m256i reg, size_t len, __m256i seed);
 __m256i simdHash128to64(__m256i x, __m256i seed);
 __m256i mul64_haswell (__m256i a, __m256i b);
  //Starts there

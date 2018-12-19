@@ -740,10 +740,8 @@ __m256i simdCityHash64(__m256i reg, __m256i mm_len) {
 
 
 __m256i CitysimdHash64WithSeeds(__m256i reg,__m256i  mm_len,
-                           uint64 seed0, uint64 seed1) {
-  uint64 arr[4],arr1[4];
-  std::fill_n(arr,4,seed1);
-  __m256i mm_seed1= _mm256_load_si256((__m256i *) arr);
+                           uint64 seed0, __m256i mm_seed1) {
+  uint64 arr1[4];
   std::fill_n(arr1,4,seed0);
   __m256i mm_seed0= _mm256_load_si256((__m256i *) arr1);
   __m256i x =simdCityHash64(reg,mm_len);
@@ -752,7 +750,7 @@ __m256i CitysimdHash64WithSeeds(__m256i reg,__m256i  mm_len,
  return simdHashLen16(x1, mm_seed1);
 }
 
-__m256i CitysimdHash64WithSeed(__m256i reg, size_t len, uint64_t seed) { //Starts there
+  __m256i CitysimdHash64WithSeed(__m256i reg, size_t len, __m256i seed) { //Starts there
   uint64 length=len; 
   uint64 arr[4];
   std::fill_n(arr,4,length);
