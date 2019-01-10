@@ -1,0 +1,40 @@
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 4e-06s \\
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 4e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 5e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 4e-06s \\
+MurmurHash3 SIMD & 2e-06s \\
+MurmurHash3 & 4e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 4e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 4e-06s \\
+MurmurHash3 SIMD & 2e-06s \\
+MurmurHash3 & 4e-06s \\
+MurmurHash3 SIMD & 2e-06s \\
+MurmurHash3 & 3e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
+MurmurHash3 & 4e-06s \\
+MurmurHash3 SIMD & 2e-06s \\
+MurmurHash3 & 4e-06s \\
+MurmurHash3 SIMD & 2e-06s \\
+MurmurHash3 & 4e-06s \\
+MurmurHash3 SIMD & 3e-06s \\
