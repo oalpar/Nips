@@ -283,7 +283,9 @@ void s_simpletab::init(int ch)
     for (int i = 0; i < 4; ++i)
 	{
         for (int j = 0; j < 256; ++j)
-		{ m_T[j][i] = h(x++);}
+		{ m_T[j][i] = h(x);
+		  x+=8;
+		}
 
 	}
 	}
@@ -308,45 +310,45 @@ __m256i s_simpletab::operator()(uint32_t x,__m256i x1,int ch)
 {
 	if(ch==1)
 	{
-	uint32_t arr_h[8];
-	uint32_t arr_x[8];
-	uint32_t h=0; // Final hash value
-	std::fill_n(arr_h,8,h);
-	__m256i temp;
-	__m256i m_h= _mm256_load_si256((__m256i *) arr_h);
-	for (int i = 0; i < 4; ++i)
+	  uint32_t arr_h[8];
+	  uint32_t arr_x[8];
+	  uint32_t h=0; // Final hash value
+	  std::fill_n(arr_h,8,h);
+	  __m256i temp;
+	  __m256i m_h= _mm256_load_si256((__m256i *) arr_h);
+	  for (int i = 0; i < 4; ++i)
 	{
-		for(int k=0; k<8;k++)
-		{
-		arr_x[k]=_mm256_extract_epi32(x1,k);
-		arr_h[k]=m_T[(uint8_t)arr_x[k]][i];
-		}
-		temp= _mm256_load_si256((__m256i *) arr_h);
-		 m_h= _mm256_xor_si256(m_h,temp);
+	  for(int k=0; k<8;k++)
+	    {
+	      arr_x[k]=_mm256_extract_epi32(x1,k);
+	      arr_h[k]=m_T[(uint8_t)arr_x[k]][i];
+	    }
+	  temp= _mm256_load_si256((__m256i *) arr_h);
+	  m_h= _mm256_xor_si256(m_h,temp);
 		x1=	_mm256_srli_epi32 (x1, 8);
 	}
-	return m_h;
+	  return m_h;
 	}
 	else
-	{
+	  {
 	uint32_t arr[8];
     	uint32_t h=0; // Final hash value
 	std::fill_n(arr,8,h);
 	__m256i m_h= _mm256_load_si256((__m256i *) arr);
-    //for (int i = 0; i < 4; ++i, x >>= 8)
-    //{ 
+	//for (int i = 0; i < 4; ++i, x >>= 8)
+	//{ 
 	int i=0;
-    __m256i tempo= _mm256_xor_si256(m_h,mm_T[(uint8_t)x][i]);//h ^= m_T[(uint8_t)x][i];// m_h= mh op m_T[][] might be a problem due to simd object
-     i=i+1;
-	 x >>= 8;
-	 __m256i tempo1= _mm256_xor_si256(tempo,mm_T[(uint8_t)x][i]);
-	 i=i+1;
-	 x >>= 8;
-	 __m256i tempo2= _mm256_xor_si256(tempo1,mm_T[(uint8_t)x][i]);
-	 i=i+1;
+	__m256i tempo= _mm256_xor_si256(m_h,mm_T[(uint8_t)x][i]);//h ^= m_T[(uint8_t)x][i];// m_h= mh op m_T[][] might be a problem due to simd object
+	i=i+1;
+	x >>= 8;
+	__m256i tempo1= _mm256_xor_si256(tempo,mm_T[(uint8_t)x][i]);
+	i=i+1;
+	x >>= 8;
+	__m256i tempo2= _mm256_xor_si256(tempo1,mm_T[(uint8_t)x][i]);
+	i=i+1;
 	 x >>= 8;
 	 __m256i tempo3= _mm256_xor_si256(tempo2,mm_T[(uint8_t)x][i]);
-	//}
-	return tempo3;
-	}
+	 //}
+	 return tempo3;
+	  }
 }
