@@ -167,6 +167,7 @@ void testTime(uint32_t trials)
       x = tt(nums[i]);
     end = clock();
     cout << "Twisted Tabulation & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+
 }
 
 int main()

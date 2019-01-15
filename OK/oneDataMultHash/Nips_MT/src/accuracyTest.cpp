@@ -19,10 +19,12 @@ int main(int argc, char** argv){
   uint64_t ttemp= stoull(argv[1]) ;
 uint64_t trials =1<< ttemp/2;
 trials =trials << ttemp/2;
+
 if(ttemp %2 != 0){
 trials =trials <<1;
 
 }
+//std::cout << trials << std::endl;
   vector<uint32_t> nums;
   for (uint64_t i = 0; i < trials; ++i)
     nums.push_back(dist(rng));
@@ -38,7 +40,7 @@ trials =trials <<1;
     //	cout<<x<<endl;
     }
   clock_t end = clock();
-  cout << "MurmurHash3 & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+  cout << (float)(end-start)/CLOCKS_PER_SEC << ";" ;
   
   
   murmurwrap mmSIMD;
@@ -69,7 +71,7 @@ trials =trials <<1;
 	 // }
     }
     end = clock();
-    cout << "MurmurHash3 SIMD & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+    cout <<  (float)(end-start)/CLOCKS_PER_SEC <<  endl;
        return 0;
 }
 

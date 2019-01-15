@@ -1,6 +1,6 @@
 
-#ifndef _HASHING_MORE_H_
-#define _HASHING_MORE_H_
+#ifndef _HASHING_MORE_H_1
+#define _HASHING_MORE_H_1
 
 #include <cstdint>
 
@@ -35,10 +35,10 @@ void murmurwrap1::init()
     rng.seed(std::random_device()());
     std::uniform_int_distribution<uint32_t> dist;
 
-    for(int j=0; j<8; j++){
+    
     m_seed = dist(rng);
-	seeds[j]=m_seed;
-	}
+
+	
     // TODO: Replace with the line below if using randomgen.h
     //m_seed = getRandomUInt32();
 }
@@ -47,10 +47,10 @@ uint32_t murmurwrap1::operator()(uint32_t x)
 {
     //comment this out if working for real
     uint32_t h;
-for(int j=0; j<8; j++){
-    m_seed=seeds[j];
+
+  
 	MurmurHash3_x86_32(&x, 4, m_seed, &h);
-    }
+    
 	return h;
 }
 

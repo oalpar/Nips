@@ -1,6 +1,6 @@
 
-#ifndef _HASHING_MORE_H_
-#define _HASHING_MORE_H_
+#ifndef _HASHING_MORE_H_1
+#define _HASHING_MORE_H_1
 
 #include <cstdint>
 

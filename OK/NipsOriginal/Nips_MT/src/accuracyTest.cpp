@@ -22,6 +22,7 @@ trials = trials << ttemp/2;
 if(ttemp%2 != 0){
 	trials=trials<<1;
 }
+std::cout<< trials<< std::endl;
   vector<uint32_t> nums;
   for (uint64_t i = 0; i < trials; ++i)
     nums.push_back(dist(rng));
@@ -37,7 +38,7 @@ if(ttemp%2 != 0){
     //	cout<<x<<endl;
     }
   clock_t end = clock();
-  cout << "MurmurHash3 & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+  cout<< (float)(end-start)/CLOCKS_PER_SEC << ";"<<std::flush ;
   
       
   murmurwrap mmSIMD;
@@ -69,7 +70,7 @@ if(ttemp%2 != 0){
 	 // }
     }
     end = clock();
-    cout << "MurmurHash3 SIMD & " << (float)(end-start)/CLOCKS_PER_SEC << "s \\\\" << endl;
+    cout  << (float)(end-start)/CLOCKS_PER_SEC << endl;
      return 0;
 }
 
