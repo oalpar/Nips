@@ -1,14 +1,18 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Intel SIMD Instructions}{}% 2
-\BOOKMARK [1][-]{section.3}{Hashing Functions}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Model 1}{section.3}% 4
-\BOOKMARK [2][-]{subsection.3.2}{Model 2}{section.3}% 5
-\BOOKMARK [2][-]{subsection.3.3}{Multiply-Shift Hash}{section.3}% 6
-\BOOKMARK [2][-]{subsection.3.4}{MurMurHash3}{section.3}% 7
-\BOOKMARK [2][-]{subsection.3.5}{Tabular Hash}{section.3}% 8
-\BOOKMARK [1][-]{section.4}{Experiment and Results}{}% 9
-\BOOKMARK [1][-]{section.5}{Future Work}{}% 10
-\BOOKMARK [2][-]{subsection.5.1}{HyperLogLog}{section.5}% 11
-\BOOKMARK [2][-]{subsection.5.2}{Bloom Filter}{section.5}% 12
-\BOOKMARK [2][-]{subsection.5.3}{Count-Min Sketch}{section.5}% 13
-\BOOKMARK [1][-]{section.6}{Conclusions}{}% 14
+\BOOKMARK [2][-]{subsection.2.1}{Load-Extract Instructions}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Bitwise Instructions}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Arithmetic Instructions}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Logical Instructions}{section.2}% 6
+\BOOKMARK [1][-]{section.3}{Hashing Functions}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Model 1}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.2}{Model 2}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.3}{Multiply-Shift Hash}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.4}{MurMurHash3}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.5}{Tabular Hash}{section.3}% 12
+\BOOKMARK [1][-]{section.4}{Experiment and Results}{}% 13
+\BOOKMARK [1][-]{section.5}{Future Work}{}% 14
+\BOOKMARK [2][-]{subsection.5.1}{HyperLogLog}{section.5}% 15
+\BOOKMARK [2][-]{subsection.5.2}{Bloom Filter}{section.5}% 16
+\BOOKMARK [2][-]{subsection.5.3}{Count-Min Sketch}{section.5}% 17
+\BOOKMARK [1][-]{section.6}{Conclusions}{}% 18

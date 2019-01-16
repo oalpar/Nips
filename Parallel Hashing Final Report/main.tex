@@ -102,15 +102,44 @@ August\or September\or October\or November\or December\fi\ \number\year}
 \par Hash functions are 
 \section{Intel SIMD Instructions}
 SIMD is an instruction set available mostly on all current processors. In this project we used AVX(Advanced Vector Extension) and AVX2 instructions which are available for Intel processors since Sandy Bridge architecture. With AVX instructions, it is possible to process 128 bits of data in registers on parallel, with AVX2 this increased to 256 bits. The SIMD instructions we used on this project and their descriptions could be found in the following paragraph.
+
+\subsection{Load-Extract Instructions}
+\textcolor{blue}{\_\_m256i} \mm256\_load\_si256 (\textcolor{blue}{\_\_m256i const *} \textcolor{green}{mem\_addr})
+\par Load 256-bits of integer data from memory into dst.mem\_addr must be aligned on a 32-byte boundary.
 \par
+\textcolor{blue}{\_\_m256i} \mm256\_loadu\_si256 (\textcolor{blue}{\_\_m256i const *} \textcolor{green}{mem\_addr})
+\par Load 256-bits of integer data from memory into dst.mem\_addr does not need to be aligned on any particular boundary.
+\par
+\textcolor{blue}{ \_\_int32} \_mm256\_extract\_epi32 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{const int} \textcolor{green}{b})
+\par Add 4 packed to 256-bit side by side 64-bit integers in a and b, and store the results in dst.
+\par
+\textcolor{blue}{ \_\_m256i} \_mm256\_set1\_epi32 ( \textcolor{blue}{ int} \textcolor{green}{a})
+\par Broadcast 32-bit integer a to all elements of dst.
+\par 
+\subsection{Bitwise Instructions}
+\textcolor{blue}{ \_\_m256i} \_mm256\_slli\_epi64 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{int} \textcolor{green}{imm8})
+\par Shift packed 64-bit integers in a left by imm8 while shifting in zeros, and store the result in dst.
+\par
+\textcolor{blue}{ \_\_m256i} \_mm256\_slri\_epi64 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{int} \textcolor{green}{imm8})
+\par Shift packed 64-bit integers in a right by imm8 while shifting in zeros, and store the result in dst.
+\par
+\textcolor{blue}{ \_\_m256i} \_mm256\_shuffle\_epi32 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{int} \textcolor{green}{imm8})
+\par Shuffle 32-bit integers in a within 128-bit lanes using the control in imm8, and store the results in dst.
+\subsection{Arithmetic Instructions}
 \textcolor{blue}{ \_\_m256i} \_mm256\_add\_epi32 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{ \_\_m256i} \textcolor{green}{b})
 \par Add 8 packed to 256-bit side by side 32-bit integers in a and b, and store the results in dst.
 \par
 \textcolor{blue}{ \_\_m256i} \_mm256\_add\_epi64 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{ \_\_m256i} \textcolor{green}{b})
 \par Add 4 packed to 256-bit side by side 64-bit integers in a and b, and store the results in dst.
 \par
-\textcolor{blue}{ \_\_int32} \_mm256\_extract\_epi32 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{const int} \textcolor{green}{b})
-\par Add 4 packed to 256-bit side by side 64-bit integers in a and b, and store the results in dst.
+\textcolor{blue}{ \_\_m256i} \_mm256\_sub\_epi64 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{ \_\_m256i} \textcolor{green}{b})
+\par Subtract packed 64-bit integers in b from 64-bit integers in a, and store the result in dst.
+\par
+\textcolor{blue}{ \_\_m256i} \_mm256\_mullo\_epi32 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{ \_\_m256i} \textcolor{green}{b})
+\par Multiply the packed 32-bit integers in a and b, producing intermediate 64-bit integers, and store the low 32 bits of the intermediate integers in dst.
+\par
+\subsection{Logical Instructions}
+
 
 \section{Hashing Functions}
 We have developed our work under 2 models; Model 1, one data multiple hash, where we generate multiple hash values from a single data sample, and Model 2, one data one hash, where we generate only one hash value using the same random seed for a single data sample. As our hash functions, we used Multiply-Shift Hash, MurMurHash3  and Tabular Hash. 

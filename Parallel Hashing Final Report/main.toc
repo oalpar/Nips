@@ -1,14 +1,18 @@
 \contentsline {section}{\numberline {1}Introduction}{i}{section.1}
 \contentsline {section}{\numberline {2}Intel SIMD Instructions}{i}{section.2}
+\contentsline {subsection}{\numberline {2.1}Load-Extract Instructions}{i}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Bitwise Instructions}{ii}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Arithmetic Instructions}{ii}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Logical Instructions}{ii}{subsection.2.4}
 \contentsline {section}{\numberline {3}Hashing Functions}{ii}{section.3}
-\contentsline {subsection}{\numberline {3.1}Model 1}{ii}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Model 2}{ii}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Multiply-Shift Hash}{ii}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}MurMurHash3}{iii}{subsection.3.4}
-\contentsline {subsection}{\numberline {3.5}Tabular Hash}{iii}{subsection.3.5}
-\contentsline {section}{\numberline {4}Experiment and Results}{iii}{section.4}
-\contentsline {section}{\numberline {5}Future Work}{iii}{section.5}
-\contentsline {subsection}{\numberline {5.1}HyperLogLog}{iii}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}Bloom Filter}{iii}{subsection.5.2}
-\contentsline {subsection}{\numberline {5.3}Count-Min Sketch}{iii}{subsection.5.3}
-\contentsline {section}{\numberline {6}Conclusions}{iii}{section.6}
+\contentsline {subsection}{\numberline {3.1}Model 1}{iii}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Model 2}{iii}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Multiply-Shift Hash}{iii}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}MurMurHash3}{iv}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}Tabular Hash}{iv}{subsection.3.5}
+\contentsline {section}{\numberline {4}Experiment and Results}{iv}{section.4}
+\contentsline {section}{\numberline {5}Future Work}{iv}{section.5}
+\contentsline {subsection}{\numberline {5.1}HyperLogLog}{iv}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Bloom Filter}{iv}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Count-Min Sketch}{iv}{subsection.5.3}
+\contentsline {section}{\numberline {6}Conclusions}{iv}{section.6}
