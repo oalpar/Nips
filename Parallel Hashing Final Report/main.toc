@@ -1,10 +1,10 @@
 \contentsline {section}{\numberline {1}Introduction}{i}{section.1}
 \contentsline {section}{\numberline {2}Intel SIMD Instructions}{i}{section.2}
-\contentsline {subsection}{\numberline {2.1}Load-Extract Instructions}{i}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.1}Load-Extract Instructions}{ii}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}Bitwise Instructions}{ii}{subsection.2.2}
 \contentsline {subsection}{\numberline {2.3}Arithmetic Instructions}{ii}{subsection.2.3}
 \contentsline {subsection}{\numberline {2.4}Logical Instructions}{ii}{subsection.2.4}
-\contentsline {section}{\numberline {3}Hashing Functions}{ii}{section.3}
+\contentsline {section}{\numberline {3}Hashing Functions}{iii}{section.3}
 \contentsline {subsection}{\numberline {3.1}Model 1}{iii}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Model 2}{iii}{subsection.3.2}
 \contentsline {subsection}{\numberline {3.3}Multiply-Shift Hash}{iii}{subsection.3.3}
