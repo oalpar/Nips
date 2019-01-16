@@ -103,7 +103,7 @@ August\or September\or October\or November\or December\fi\ \number\year}
 \par Search is one of the most important problems of computer science and used extensively in any areas. The purpose of a hash function is to map any key or value to an index, in order to make a search being possible to do in O(1) time. With this, any operation of, accessing, comparing, compressing etc. of datasets become cheaper to execute since we know that if data is in the dataset by one access because we know it's possible index. With the data that generated is growing
 everyday, hash functions become a powerful tool and parallelising them is a one way to acquire a fast hash function. In this work, we will introduce Intel's SIMD instructions to achieve instruction level parallelism over hash functions.
 \section{Intel SIMD Instructions}
-SIMD is an instruction set available mostly on all current processors. In this project we used AVX(Advanced Vector Extension) and AVX2 instructions which are available for Intel processors since Sandy Bridge architecture. With AVX instructions, it is possible to process 128 bits of data in registers on parallel, with AVX2 this increased to 256 bits, meaning that we can do simple arithmetic and logical operations of 8 32-bit integers at the same time. The SIMD instructions we used on this project and their descriptions could be found in Appendix A.
+SIMD is an instruction set available mostly on all current processors. In this project we used AVX (Advanced Vector Extension) and AVX2 instructions which are available for Intel processors since Sandy Bridge architecture. With AVX instructions, it is possible to process 128 bits of data in registers on parallel, with AVX2 this increased to 256 bits, meaning that we can do simple arithmetic and logical operations of 8 32-bit integers at the same time. The SIMD instructions we used on this project and their descriptions could be found in Appendix A.
 \section{Hashing Strategies}
 As our hash functions, we used Multiply-Shift Hash, MurMurHash3  and Tabular Hash. Pseudocodes of these functions can be found in Appendix B. For each hash function, we have developed our work under 2 models; Model 1, one data multiple hash, where we generate multiple hash values from a single data sample, and Model 2, one data one hash, where we generate only one hash value using the same random seed for a single data sample. For both models we implemented the hash functions with SIMD instructions in simple arithmetic and logical operations. This way we were able to process 8 32-bit integers in parallel.
 \subsection{Model 1}
@@ -112,6 +112,8 @@ As our hash functions, we used Multiply-Shift Hash, MurMurHash3  and Tabular Has
 \includegraphics[width=0.5\textwidth]{one_data_multi_hash.png} 
 \caption{Illustration of Model 1}
 \end{figure}
+
+
 \subsection{Model 2}
 \begin{figure}[H]
 \centering

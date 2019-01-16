@@ -1,18 +1,20 @@
 \contentsline {section}{\numberline {1}Introduction}{i}{section.1}
-\contentsline {section}{\numberline {2}Intel SIMD Instructions}{i}{section.2}
-\contentsline {subsection}{\numberline {2.1}Load-Extract Instructions}{ii}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Bitwise Instructions}{ii}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Arithmetic Instructions}{ii}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}Logical Instructions}{ii}{subsection.2.4}
-\contentsline {section}{\numberline {3}Hashing Functions}{iii}{section.3}
-\contentsline {subsection}{\numberline {3.1}Model 1}{iii}{subsection.3.1}
+\contentsline {section}{\numberline {2}Intel SIMD Instructions}{ii}{section.2}
+\contentsline {section}{\numberline {3}Hashing Strategies}{ii}{section.3}
+\contentsline {subsection}{\numberline {3.1}Model 1}{ii}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Model 2}{iii}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Multiply-Shift Hash}{iii}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}MurMurHash3}{iv}{subsection.3.4}
-\contentsline {subsection}{\numberline {3.5}Tabular Hash}{iv}{subsection.3.5}
-\contentsline {section}{\numberline {4}Experiment and Results}{iv}{section.4}
-\contentsline {section}{\numberline {5}Future Work}{iv}{section.5}
-\contentsline {subsection}{\numberline {5.1}HyperLogLog}{iv}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}Bloom Filter}{iv}{subsection.5.2}
-\contentsline {subsection}{\numberline {5.3}Count-Min Sketch}{iv}{subsection.5.3}
-\contentsline {section}{\numberline {6}Conclusions}{iv}{section.6}
+\contentsline {section}{\numberline {4}Experiment and Results}{iii}{section.4}
+\contentsline {section}{\numberline {5}Future Work}{iii}{section.5}
+\contentsline {subsection}{\numberline {5.1}HyperLogLog}{iii}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Bloom Filter}{iii}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Count-Min Sketch}{iii}{subsection.5.3}
+\contentsline {section}{\numberline {6}Conclusions}{iii}{section.6}
+\contentsline {section}{\numberline {A}SIMD Instructions Used in Project}{1}{Appendix.1.A}
+\contentsline {subsection}{\numberline {A.1}Load-Extract Instructions}{1}{subsection.1.A.1}
+\contentsline {subsection}{\numberline {A.2}Bitwise Instructions}{1}{subsection.1.A.2}
+\contentsline {subsection}{\numberline {A.3}Arithmetic Instructions}{1}{subsection.1.A.3}
+\contentsline {subsection}{\numberline {A.4}Logical Instructions}{1}{subsection.1.A.4}
+\contentsline {section}{\numberline {B}Hash Functions Used in Project}{2}{Appendix.1.B}
+\contentsline {subsection}{\numberline {B.1}Multiply-Shift Hash}{2}{subsection.1.B.1}
+\contentsline {subsection}{\numberline {B.2}MurMurHash3}{2}{subsection.1.B.2}
+\contentsline {subsection}{\numberline {B.3}Tabular Hash}{2}{subsection.1.B.3}
