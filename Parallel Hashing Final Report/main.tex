@@ -24,6 +24,7 @@
 \pagestyle{fancy}
 \usepackage{tikz}
 \usepackage{xcolor}
+\usepackage[title]{appendix}
 
 \renewcommand{\sectionmark}[1]{\markboth{#1}{#1}}
 \renewcommand{\subsectionmark}[1]{\markright{#1}}
@@ -101,13 +102,43 @@ August\or September\or October\or November\or December\fi\ \number\year}
 \section{Introduction}
 \par Hash functions are 
 \section{Intel SIMD Instructions}
-SIMD is an instruction set available mostly on all current processors. In this project we used AVX(Advanced Vector Extension) and AVX2 instructions which are available for Intel processors since Sandy Bridge architecture. With AVX instructions, it is possible to process 128 bits of data in registers on parallel, with AVX2 this increased to 256 bits. The SIMD instructions we used on this project and their descriptions could be found in the following paragraph.
+SIMD is an instruction set available mostly on all current processors. In this project we used AVX(Advanced Vector Extension) and AVX2 instructions which are available for Intel processors since Sandy Bridge architecture. With AVX instructions, it is possible to process 128 bits of data in registers on parallel, with AVX2 this increased to 256 bits, meaning that we can do simple arithmetic and logical operations of 8 32-bit integers at the same time. The SIMD instructions we used on this project and their descriptions could be found in Appendix A.
+\section{Hashing Strategies}
+As our hash functions, we used Multiply-Shift Hash, MurMurHash3  and Tabular Hash. Pseudocodes of these functions can be found in Appendix B. For each hash function, we have developed our work under 2 models; Model 1, one data multiple hash, where we generate multiple hash values from a single data sample, and Model 2, one data one hash, where we generate only one hash value using the same random seed for a single data sample. For both models we implemented the hash functions with SIMD instructions in simple arithmetic and logical operations. This way we were able to process 8 32-bit integers in parallel.
+\subsection{Model 1}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{one_data_multi_hash.png} 
+\caption{Illustration of Model 1}
+\end{figure}
+\subsection{Model 2}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{multi_data_single_hash.png} 
+\caption{Illustration of Model 2}
+\end{figure}
 
+\section{Experiment and Results}
+\section{Future Work}
+\subsection{HyperLogLog}
+\subsection{Bloom Filter}
+\subsection{Count-Min Sketch}
+\section{Conclusions}
+\cleardoublepage
+\pagenumbering{arabic}
+
+\cleardoublepage
+
+
+\bibliographystyle{ieeetr}
+\bibliography{mybib.bib}
+\begin{appendices}
+\section{SIMD Instructions Used in Project}
 \subsection{Load-Extract Instructions}
-\textcolor{blue}{\_\_m256i} \mm256\_load\_si256 (\textcolor{blue}{\_\_m256i const *} \textcolor{green}{mem\_addr})
-\par Load 256-bits of integer data from memory into dst.mem\_addr must be aligned on a 32-byte boundary.
+\textcolor{blue}{\_\_m256i} \_mm256\_load\_si256 (\textcolor{blue}{\_\_m256i const *} \textcolor{green}{mem\_addr})
+\par Load 256-bits of integer data from memory into dst. mem\_addr must be aligned on a 32-byte boundary.
 \par
-\textcolor{blue}{\_\_m256i} \mm256\_loadu\_si256 (\textcolor{blue}{\_\_m256i const *} \textcolor{green}{mem\_addr})
+\textcolor{blue}{\_\_m256i} \_mm256\_loadu\_si256 (\textcolor{blue}{\_\_m256i const *} \textcolor{green}{mem\_addr})
 \par Load 256-bits of integer data from memory into dst.mem\_addr does not need to be aligned on any particular boundary.
 \par
 \textcolor{blue}{ \_\_int32} \_mm256\_extract\_epi32 ( \textcolor{blue}{ \_\_m256i} \textcolor{green}{a}, \textcolor{blue}{const int} \textcolor{green}{b})
@@ -146,18 +177,8 @@ SIMD is an instruction set available mostly on all current processors. In this p
 \par Compute the bitwise XOR of 256 bits integer represented data in a and b and store the result in dst.
 \par
 
-\section{Hashing Functions}
-We have developed our work under 2 models; Model 1, one data multiple hash, where we generate multiple hash values from a single data sample, and Model 2, one data one hash, where we generate only one hash value using the same random seed for a single data sample. As our hash functions, we used Multiply-Shift Hash, MurMurHash3  and Tabular Hash. 
-\subsection{Model 1}
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{one_data_multi_hash.png} 
-\end{figure}
-\subsection{Model 2}
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.7\textwidth]{multi_data_single_hash.png} 
-\end{figure}
+
+\section{Hash Functions Used in Project}
 \subsection{Multiply-Shift Hash}
 \begin{algorithm}[H]
 \begin{algorithmic}[1]
@@ -229,18 +250,6 @@ We have developed our work under 2 models; Model 1, one data multiple hash, wher
 \end{algorithm}
 
 \subsection{Tabular Hash}
-\section{Experiment and Results}
-\section{Future Work}
-\subsection{HyperLogLog}
-\subsection{Bloom Filter}
-\subsection{Count-Min Sketch}
-\section{Conclusions}
-\cleardoublepage
-\pagenumbering{arabic}
+\end{appendices}
 
-\cleardoublepage
-
-
-\bibliographystyle{ieeetr}
-\bibliography{mybib.bib}
 \end{document}
