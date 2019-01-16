@@ -99,7 +99,8 @@ August\or September\or October\or November\or December\fi\ \number\year}
 
 
 \section{Introduction}
-\par Hash functions are 
+\par Search is one of the most important problems of computer science and used extensively in any areas. The purpose of a hash function is to map any key or value to an index, in order to make a search being possible to do in O(1) time. With this, any operation of, accessing, comparing, compressing etc. of datasets become cheaper to execute since we know that if data is in the dataset by one access because we know it's possible index. With the data that generated is growing
+everyday, hash functions become a powerful tool and parallelising them is a one way to acquire a fast hash function. In this work, we will introduce Intel's SIMD instructions to achieve instruction level parallelism over hash functions.
 \section{Intel SIMD Instructions}
 SIMD is an instruction set available mostly on all current processors. In this project we used AVX(Advanced Vector Extension) and AVX2 instructions which are available for Intel processors since Sandy Bridge architecture. With AVX instructions, it is possible to process 128 bits of data in registers on parallel, with AVX2 this increased to 256 bits. The SIMD instructions we used on this project and their descriptions could be found in the following paragraph.
 
