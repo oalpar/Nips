@@ -30,7 +30,7 @@
 \renewcommand{\subsectionmark}[1]{\markright{#1}}
 
 \fancyhf{}
-\fancyhead[RO]{\nouppercase{\footnotesize\sc\leftmark\ \hrulefill\ \thepage}}
+\fancyhead[RO]{\nouppercase{\footnotesize\sc\rightmark\ \hrulefill\ \thepage}}
 \fancyhead[RE]{\nouppercase{\footnotesize\sc\thepage\ \hrulefill\ }}
 \renewcommand{\headrulewidth}{0pt}
 
@@ -100,8 +100,7 @@ August\or September\or October\or November\or December\fi\ \number\year}
 
 
 \section{Introduction}
-\par Search is one of the most important problems of computer science and used extensively in any areas. The purpose of a hash function is to map any key or value to an index, in order to make a search being possible to do in O(1) time. With this, any operation of, accessing, comparing, compressing etc. of datasets become cheaper to execute since we know that if data is in the dataset by one access because we know it's possible index. With the data that generated is growing
-everyday, hash functions become a powerful tool and parallelising them is a one way to acquire a fast hash function. In this work, we will introduce Intel's SIMD instructions to achieve instruction level parallelism over hash functions.
+\par Searching is one of the most important problems of computer science and it is used extensively in many areas such as cryptography and network security. Hash functions are one-way functions that map an input value to another value. Randomness is essential in hashing because it is not desired to have multiple values resulting in the same hash value. Hashing is also used in  data structures where we use the hashed values as indexes of a table  and keep the value in the index of a table determined by hash function. This property allows us to do search, insert, delete operations in O(1) time. In this work, we introduce using SIMD instructions by Intel in hash functions to generate hash values in parallel. Section 2 introduces the  SIMD instructions,  section 3 discusses the two different hashing approaches we worked on , section 4 presents the improvement we achieved and section 5 presents applications for our work.
 \section{Intel SIMD Instructions}
 SIMD is an instruction set available mostly on all current processors. In this project we used AVX (Advanced Vector Extension) and AVX2 instructions which are available for Intel processors since Sandy Bridge architecture. With AVX instructions, it is possible to process 128 bits of data in registers on parallel, with AVX2 this increased to 256 bits, meaning that we can do simple arithmetic and logical operations of 8 32-bit integers at the same time. The SIMD instructions we used on this project and their descriptions could be found in Appendix A.
 \section{Hashing Strategies}
@@ -112,8 +111,7 @@ As our hash functions, we used Multiply-Shift Hash, MurMurHash3  and Tabular Has
 \includegraphics[width=0.5\textwidth]{one_data_multi_hash.png} 
 \caption{Illustration of Model 1}
 \end{figure}
-
-
+First model computes 8 hash values for a single given input. We apply the hash function using 8 different random seeds and do all the operations using these random 8 values. We fill an array of size 8 with our input value and apply the operation with 8 different random seeds. This model is especially useful for algorithms like Count-Min Sketch where we keep multiple hash values for a single element. 
 \subsection{Model 2}
 \begin{figure}[H]
 \centering
@@ -123,10 +121,11 @@ As our hash functions, we used Multiply-Shift Hash, MurMurHash3  and Tabular Has
 
 \section{Experiment and Results}
 \section{Future Work}
+In the future, we plan to use our hash functions with SIMD instructions in probabilistic data structures and algorithms such as HyperLogLog, Bloom Filter and Count-Min Sketch. These algorithms are very useful in estimating frequencies in large data streams.  We believe that parallelizing the hashing operations in these algorithms  will provide great amount of speedup in frequency estimation. 
 \subsection{HyperLogLog}
+
 \subsection{Bloom Filter}
 \subsection{Count-Min Sketch}
-\section{Conclusions}
 \cleardoublepage
 \pagenumbering{arabic}
 
