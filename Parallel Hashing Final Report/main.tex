@@ -100,7 +100,7 @@ August\or September\or October\or November\or December\fi\ \number\year}
 
 
 \section{Introduction}
-\par Searching is one of the most important problems of computer science and it is used extensively in many areas such as cryptography and network security. Hash functions are one-way functions that map an input value to another value. Randomness is essential in hashing because it is not desired to have multiple values resulting in the same hash value. Hashing is also used in  data structures where we use the hashed values as indexes of a table  and keep the value in the index of a table determined by hash function. This property allows us to do search, insert, delete operations in O(1) time. In this work, we introduce using SIMD instructions by Intel in hash functions to generate hash values in parallel. Section 2 introduces the  SIMD instructions,  section 3 discusses the two different hashing approaches we worked on , section 4 presents the improvement we achieved and section 5 presents applications for our work.
+\par Searching is one of the most important problems of computer science and it is used extensively in many areas such as cryptography and network security. Hash functions are one-way functions that map an input value to another value. Randomness is essential in hashing because it is not desired to have multiple values resulting in the same hash value. Hashing is also used in  data structures where we use the hashed values as indexes of a table  and keep the value in the index of a table determined by hash function. This property allows us to do search, insert, delete operations in O(1) time. In this work, we introduce using SIMD instructions by Intel in hash functions to generate hash values in parallel by using different data points in a single instruction. Section 2 introduces the  SIMD instructions,  section 3 discusses the two different hashing approaches we worked on , section 4 presents the improvement we achieved and section 5 presents applications for our work.
 \section{Intel SIMD Instructions}
 SIMD is an instruction set available mostly on all current processors. In this project we used AVX (Advanced Vector Extension) and AVX2 instructions which are available for Intel processors since Sandy Bridge architecture. With AVX instructions, it is possible to process 128 bits of data in registers on parallel, with AVX2 this increased to 256 bits, meaning that we can do simple arithmetic and logical operations of 8 32-bit integers at the same time. The SIMD instructions we used on this project and their descriptions could be found in Appendix A.
 \section{Hashing Strategies}
@@ -114,11 +114,11 @@ As our hash functions, we used Multiply-Shift Hash, MurMurHash3  and Tabular Has
 First model computes 8 hash values for a single given input. We apply the hash function using 8 different random seeds and do all the operations using these random 8 values. We fill an array of size 8 with our input value and apply the operation with 8 different random seeds. This model is especially useful for algorithms like Count-Min Sketch where we keep multiple hash values for a single element. 
 \subsection{Model 2}
 \begin{figure}[H]
-\centering
+\centering		
 \includegraphics[width=0.7\textwidth]{multi_data_single_hash.png} 
 \caption{Illustration of Model 2}
 \end{figure}
-
+Second model computes 8 hash values for given 8 inputs, using the same random seed for all data points. This approach could be seen as overriding the data length a register can hold, which is 256 bits, by carrying 8 different 32-bit value to get 8 different 32-bit hash result by single instruction, in parallel. Using this approach, the goal is to achieve 8 hash values in a time of 1 hash value without SIMD instructions. This approach could be useful in applications like bloom filter, where every element needs one hash to check belonging to a set.
 \section{Experiment and Results}
 \section{Future Work}
 In the future, we plan to use our hash functions with SIMD instructions in probabilistic data structures and algorithms such as HyperLogLog, Bloom Filter and Count-Min Sketch. These algorithms are very useful in estimating frequencies in large data streams.  We believe that parallelizing the hashing operations in these algorithms  will provide great amount of speedup in frequency estimation. 
