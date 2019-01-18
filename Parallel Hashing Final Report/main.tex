@@ -118,14 +118,17 @@ First model computes 8 hash values for a single given input. We apply the hash f
 \includegraphics[width=0.7\textwidth]{multi_data_single_hash.png} 
 \caption{Illustration of Model 2}
 \end{figure}
-Second model computes 8 hash values for given 8 inputs, using the same random seed for all data points. This approach could be seen as overriding the data length a register can hold, which is 256 bits, by carrying 8 different 32-bit value to get 8 different 32-bit hash result by single instruction, in parallel. Using this approach, the goal is to achieve 8 hash values in a time of 1 hash value without SIMD instructions. This approach could be useful in applications like bloom filter, where every element needs one hash to check belonging to a set.
+Second model computes 8 hash values for given 8 inputs, using the same random seed for all data points. This approach could be seen as overriding the data length a register can hold, which is 256 bits, by carrying 8 different 32-bit value to get 8 different 32-bit hash result by single instruction, in parallel. Using this approach, the goal is to achieve 8 hash values in a time of 1 hash value without SIMD instructions. This approach could be useful in applications like bloom filter, where every element needs one hash to check membership to a set.
 \section{Experiment and Results}
 \section{Future Work}
 In the future, we plan to use our hash functions with SIMD instructions in probabilistic data structures and algorithms such as HyperLogLog, Bloom Filter and Count-Min Sketch. These algorithms are very useful in estimating frequencies in large data streams.  We believe that parallelizing the hashing operations in these algorithms  will provide great amount of speedup in frequency estimation. 
 \subsection{HyperLogLog}
-
+HyperLogLog hashes every key to a bit stream and then approximates the distinct element number of the hashed set by bit stream's prefixes. To do this, HyperLogLog uses the same hash function for all keys to be hashed. With this property, HyperLogLog is suitable for multiple data, one hash approach. 
+Implementing SIMD instructions on a HyperLogLog could achieve great speedup as the HyperLogLog works in a one pass over data manner, only counting hash values..  
 \subsection{Bloom Filter}
+As mentioned earlier, bloom filter is one of the well suited applications for multiple data - one hash approach. To open up, bloom filter is a membership query which hashes keys to hash values and map them in a bit vector. With a bloom filter employing a SIMD instruction including hash function, it would be possible to answer 8 membership queries at once.
 \subsection{Count-Min Sketch}
+Count-min sketch is a perfectly well suited application to use with one data multiple hash approach. Since a count-min sketch is basically a 2 dimensional matrix, the rows of which are 1 dimensional hashtables. To insert an element to a sketch (i.e. counting it) requires different hash values for each row of the count-min sketch. By using  SIMD instructions, calculatıng hash values for all rows a sketch at a time could achieve a promising speed-up for the hashing phase of a count-min sketch.
 \cleardoublepage
 \pagenumbering{arabic}
 
