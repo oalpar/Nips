@@ -67,12 +67,12 @@
 January\or February\or March\or April\or May\or June\or July\or
 August\or September\or October\or November\or December\fi\ \number\year}
 \title{\vspace*{40.0mm}
-  \bf\sf Parallel Hashing
+  \bf Vectorized Hashing for Sketches
          \vspace*{20.0mm} \\
   \vspace*{40.0mm}
   %\vspace{-20mm}\framebox{DRAFT VERSION}\vspace{20mm} \\
   \Large\bf\sf Program for Undergraduate Research \vspace*{20.0mm}}
-\author{\sf Kamer Kaya, Fatih Tasyaran,Kerem Yildirir,Hakan Ogan Alpar,Ali Osman Berk}
+\author{\sf Fatih Tasyaran,Kerem Yildirir,Hakan Ogan Alpar,Ali Osman Berk, Supervised by Kamer Kaya}
 \date{\sf \today}
 
 \begin{document}
@@ -100,7 +100,7 @@ August\or September\or October\or November\or December\fi\ \number\year}
 
 
 \section{Introduction}
-\par Searching is one of the most important problems of computer science and it is used extensively in many areas such as cryptography and network security. Hash functions are one-way functions that map an input value to another value. Randomness is essential in hashing because it is not desired to have multiple values resulting in the same hash value. Hashing is also used in  data structures where we use the hashed values as indexes of a table  and keep the value in the index of a table determined by hash function. This property allows us to do search, insert, delete operations in O(1) time. In this work, we introduce using SIMD instructions by Intel in hash functions to generate hash values in parallel by using different data points in a single instruction. Section 2 introduces the  SIMD instructions,  section 3 discusses the two different hashing approaches we worked on , section 4 presents the improvement we achieved and section 5 presents applications for our work.
+\par Searching is one of the most important problems of computer science and it is used extensively in many areas. Hash functions are one-way functions that map an input value to another value. Randomness is essential in hashing because it is not desired to have multiple values resulting in the same hash value. Hashing is also used in  data structures where we use the hashed values as indexes of a table  and keep the value in the index of a table determined by hash function. This property allows us to do search, insert, delete operations in O(1) time. In this work, we introduce using SIMD instructions by Intel in hash functions to generate hash values in parallel. Section 2 introduces the  SIMD instructions,  section 3 discusses the two different hashing approaches we worked on , section 4 presents the improvement we achieved and section 5 presents future applications for our work.\cite{NIPS2017_7239}
 \section{Intel SIMD Instructions}
 SIMD is an instruction set available mostly on all current processors. In this project we used AVX (Advanced Vector Extension) and AVX2 instructions which are available for Intel processors since Sandy Bridge architecture. With AVX instructions, it is possible to process 128 bits of data in registers on parallel, with AVX2 this increased to 256 bits, meaning that we can do simple arithmetic and logical operations of 8 32-bit integers at the same time. The SIMD instructions we used on this project and their descriptions could be found in Appendix A.
 \section{Hashing Strategies}
@@ -114,11 +114,64 @@ As our hash functions, we used Multiply-Shift Hash, MurMurHash3  and Tabular Has
 First model computes 8 hash values for a single given input. We apply the hash function using 8 different random seeds and do all the operations using these random 8 values. We fill an array of size 8 with our input value and apply the operation with 8 different random seeds. This model is especially useful for algorithms like Count-Min Sketch where we keep multiple hash values for a single element. 
 \subsection{Model 2}
 \begin{figure}[H]
-\centering		
+\centering
 \includegraphics[width=0.7\textwidth]{multi_data_single_hash.png} 
 \caption{Illustration of Model 2}
 \end{figure}
 Second model computes 8 hash values for given 8 inputs, using the same random seed for all data points. This approach could be seen as overriding the data length a register can hold, which is 256 bits, by carrying 8 different 32-bit value to get 8 different 32-bit hash result by single instruction, in parallel. Using this approach, the goal is to achieve 8 hash values in a time of 1 hash value without SIMD instructions. This approach could be useful in applications like bloom filter, where every element needs one hash to check membership to a set.
+\section{Tabular Hash SIMD}
+Tabulation hashing is a simple but relatively powerful hash function.. The algorithm is
+following;
+Let p be the key to be hashed, m be the desired bit length of hash output. M is a k × n
+matrix as a lookup table. Matrix has m bit random elements in every cell.
+%%
+\begin{algorithm}
+\begin{algorithmic}
+\Function{Simple Tabulation Hash}{p,m,M}
+\State Given p,m, and initialized M(k*n)
+\State hashvalue=0
+\For{ every i th most significant q bit of p, call it x}
+\State hashvalue = hashvalue  $\oplus$ M[i][x]
+\EndFor
+\Return hashvalue
+
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%%
+This algorithm returns a single hash value corresponding to a given single p
+(key). It is possible to construct two model which are able to return multiple hash
+values f i (p)(i=0,1,…) corresponding to a given a single p and return a multiple
+hash values as a result of same hash function f 0 (p i ) (i=0,1,2,3….) corresponding
+to given different p’s (as a vector) by using SIMD instructions and vectors.
+The first model takes a single p value as key, but uses a lookup table which has a
+different type. The algorithm returns a vector of m bit hash values. Initialization of
+M is the difference between this algorithm and the original one. M contains
+vectors of random m bits as elements. The speedup is a result of parallel XOR
+operations.
+%%
+\begin{algorithm}[H]
+\begin{algorithmic}
+\Function{Tabular Hash SIMD}{p,m,M(k * n)}
+\State Given p, m, M(k * n)
+\State  hashvalue= [0,0,…..0]
+\For{ every ith most significant q bit of p, call it x}\\
+hashvalue = \_mm256\_xor\_si256(hashvalue, M[i][x]) 
+\EndFor
+\Return hashvalue
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%%
+The other model uses same type of lookup table M But XOR and shifting
+operations are done by using SIMD ınstructions. Algorithm takes a vector of p
+values as different keys. The result is again a vector of different m bit hash
+values.
+%%
+
+%%
+Resulted speed of is due to shift and xor operations with SIMD. Load extract slow
+down.
 \section{Experiment and Results}
 \section{Future Work}
 In the future, we plan to use our hash functions with SIMD instructions in probabilistic data structures and algorithms such as HyperLogLog, Bloom Filter and Count-Min Sketch. These algorithms are very useful in estimating frequencies in large data streams.  We believe that parallelizing the hashing operations in these algorithms  will provide great amount of speedup in frequency estimation. 
@@ -128,7 +181,7 @@ Implementing SIMD instructions on a HyperLogLog could achieve great speedup as t
 \subsection{Bloom Filter}
 As mentioned earlier, bloom filter is one of the well suited applications for multiple data - one hash approach. To open up, bloom filter is a membership query which hashes keys to hash values and map them in a bit vector. With a bloom filter employing a SIMD instruction including hash function, it would be possible to answer 8 membership queries at once.
 \subsection{Count-Min Sketch}
-Count-min sketch is a perfectly well suited application to use with one data multiple hash approach. Since a count-min sketch is basically a 2 dimensional matrix, the rows of which are 1 dimensional hashtables. To insert an element to a sketch (i.e. counting it) requires different hash values for each row of the count-min sketch. By using  SIMD instructions, calculatıng hash values for all rows a sketch at a time could achieve a promising speed-up for the hashing phase of a count-min sketch.
+Count-min sketch is a perfectly well suited application to use with one data multiple hash approach. Since a count-min sketch is basically a 2 dimensional matrix, the rows of which are 1 dimensional hash tables. To insert an element to a sketch (i.e. counting it) requires different hash values for each row of the count-min sketch. By using  SIMD instructions, calculating hash values for all rows a sketch at a time could achieve a promising speed-up for the hashing phase of a count-min sketch.
 \cleardoublepage
 \pagenumbering{arabic}
 
@@ -231,9 +284,8 @@ Count-min sketch is a perfectly well suited application to use with one data mul
           \State hash = hash * m + n
 	\EndFor        
 	
-	 \Comment{ Endian swapping is only necessary on big-endian machines.}
 
-   \For {each remaining byte in key}
+   \For {each remaining byte in key}	 \Comment{ Endian swapping  necessary on big-endian machines.}
 
   \State      remainingBytes = SwapEndianOrderOf(remainingBytesInKey)
 
@@ -254,7 +306,6 @@ Count-min sketch is a perfectly well suited application to use with one data mul
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Tabular Hash}
 \end{appendices}
 
 \end{document}
