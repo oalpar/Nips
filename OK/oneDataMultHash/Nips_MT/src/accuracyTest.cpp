@@ -50,21 +50,12 @@ trials =trials <<1;
   uint32_t xsimd[8];
   uint32_t arr2[8];
     start=clock();
-    for(uint64_t k=0; k<trials; k++){
+   /* for(uint64_t k=0; k<trials; k++){
     murmur=  _mm256_set1_epi32 (nums[k]);
       x1=mmSIMD(murmur);
       
       q=(const uint32_t *)  & x1;
-      /*
-      xsimd[0] = _mm256_extract_epi32(x1, 0);
-      xsimd[1] = _mm256_extract_epi32(x1, 1);
-      xsimd[2] = _mm256_extract_epi32(x1, 2);
-      xsimd[3] = _mm256_extract_epi32(x1, 3);
-      xsimd[4] = _mm256_extract_epi32(x1, 4);
-      xsimd[5] = _mm256_extract_epi32(x1, 5);
-      xsimd[6] = _mm256_extract_epi32(x1, 6);
-      xsimd[7] = _mm256_extract_epi32(x1, 7);
-    */  
+        
       //       for(int p=0;p<8;p++){
       //cout <<(x1[p] == nums2[p+i]) << endl;
 	 // cout << "Simd: hello "<< xsimd[p] <<endl;
@@ -72,7 +63,7 @@ trials =trials <<1;
     }
     end = clock();
     cout <<  (float)(end-start)/CLOCKS_PER_SEC <<  endl;
-       return 0;
+     */  return 0;
 }
 
 
