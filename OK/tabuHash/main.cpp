@@ -28,9 +28,11 @@
 #include <string>
 
 #include "bloom_filter.hpp"
-
+#include "hashing.h"
 int main()
 {
+  simpletab st;
+  st.init();
   bloom_parameters parameters;
 
   // How many elements roughly do we expect to insert?
@@ -56,7 +58,7 @@ int main()
   std::string str_list[] = { "AbC", "iJk", "XYZ" };
 
   // Insert into Bloom Filter
-  {
+  
     // Insert some strings
     /* for (std::size_t i = 0; i < (sizeof(str_list) / sizeof(std::string)); ++i)
       {
@@ -67,9 +69,16 @@ int main()
     // Insert some numbers
     for (std::size_t i = 0; i < 2; ++i)
       {
-	filter.insert(i);
+	int x= st(i*10000);
+	int index = x % filter.table_size_;
+	int bit = x % 0x08;
+	//bit_index =st(temp);
+	  //bit_index = bit_index % table_size_;
+	//bit       = bit_index % bits_per_char;
+	std::cout <<filter.table_size_<<" "<<0x08<<" "<<index <<std::endl;
+	filter.insert(index,bit);
       }
-  }
+  
 
   // Query Bloom Filter
   {

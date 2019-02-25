@@ -27,7 +27,7 @@
 #include <limits>
 #include <string>
 #include <vector>
-#include "hashing.h"
+//#include "hashing.h"
 #include <iostream>
 
 static const std::size_t bits_per_char = 0x08;    // 8 bits in 1 char(unsigned)
@@ -171,7 +171,6 @@ protected:
   typedef std::vector<unsigned char> table_type;
 
 public:
-  simpletab st;
   
   bloom_filter()
     : salt_count_(0),
@@ -191,8 +190,7 @@ public:
     salt_count_ = p.optimal_parameters.number_of_hashes;
     table_size_ = p.optimal_parameters.table_size;
    
-    st.init();
-    generate_unique_salt();
+      generate_unique_salt();
 
     bit_table_.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
   }
@@ -260,13 +258,26 @@ public:
     inserted_element_count_ = 0;
   }
 
+
+  inline void insert(int bit_index1,int  bit1)
+  {
+    uint32_t bit_index = bit_index1;
+    uint32_t bit       = bit1;
+ 
+
+  bit_table_[bit_index / bits_per_char] |= bit_mask[bit];
+ 
+
+  ++inserted_element_count_;
+}
+  //THE COMMENTED PART BELOW IS ORIGINAL IMPLEMENTATION
+  /* 
   inline void insert(const unsigned char* key_begin, const std::size_t& length)
   {
     uint32_t bit_index = 0;
     uint32_t bit       = 0;
    
     uint32_t* hold= (uint32_t*)key_begin;
-    std::cout<<"bro"<< *key_begin<<" "<< *hold<<"hi "<<std::endl;
     uint32_t temp = *hold;
     bit_index =st(temp);
     bit_index = bit_index % table_size_;
@@ -286,38 +297,41 @@ public:
   template <typename T>
   inline void insert(const T& t)
   {
+    std::cout <<"1a";
     // Note: T must be a C++ POD type.
     insert(reinterpret_cast<const unsigned char*>(&t),sizeof(T));
   }
 
   inline void insert(const std::string& key)
   {
+    std::cout <<"2a";
     insert(reinterpret_cast<const unsigned char*>(key.data()),key.size());
   }
 
   inline void insert(const char* data, const std::size_t& length)
   {
+    std::cout<<"3a";
     insert(reinterpret_cast<const unsigned char*>(data),length);
   }
 
   template <typename InputIterator>
   inline void insert(const InputIterator begin, const InputIterator end)
-  {
+    {
     InputIterator itr = begin;
-
+    std::cout<<"4a";
     while (end != itr)
       {
 	insert(*(itr++));
       }
   }
-
+  */
   inline virtual bool contains(const unsigned char* key_begin, const std::size_t length) 
   {
     uint32_t bit_index = 0;
     uint32_t bit       = 0;
     uint32_t* hold= (uint32_t*)key_begin;
     uint32_t temp = *hold;
-    bit_index =st(temp);
+    //bit_index =st(temp);
     bit_index = bit_index % table_size_;
     bit       = bit_index % bits_per_char;
     // for (std::size_t i = 0; i < salt_.size(); ++i)
@@ -620,7 +634,7 @@ protected:
 
     return hash;
   }
-
+public:
   std::vector<bloom_type>    salt_;
   std::vector<unsigned char> bit_table_;
   unsigned int               salt_count_;
