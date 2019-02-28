@@ -18,7 +18,10 @@
 
 #ifndef INCLUDE_BLOOM_FILTER_HPP
 #define INCLUDE_BLOOM_FILTER_HPP
-
+#include "hashing.h"
+#include <chrono>
+#include <immintrin.h>
+#include <stdio.h>
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -27,8 +30,7 @@
 #include <limits>
 #include <string>
 #include <vector>
-//#include "hashing.h"
-#include <iostream>
+
 
 static const std::size_t bits_per_char = 0x08;    // 8 bits in 1 char(unsigned)
 
@@ -57,6 +59,19 @@ public:
       random_seed(0xA5A5A5A55A5A5A5AULL)
   {}
 
+
+  unsigned int nextPowerOf2(unsigned int n)
+  {
+    n--;
+    n |= n >> 1;
+    n |= n >> 2;
+    n |= n >> 4;
+    n |= n >> 8;
+    n |= n >> 16;
+    n++;
+    return n;
+  }
+  
   virtual ~bloom_parameters()
   {}
 
@@ -141,7 +156,7 @@ public:
 
     optimal_parameters_t& optp = optimal_parameters;
 
-    optp.number_of_hashes = static_cast<unsigned int>(min_k)/8;
+    optp.number_of_hashes = static_cast<unsigned int>(min_k);
 
     optp.table_size = static_cast<unsigned long long int>(min_m);
 
@@ -152,6 +167,8 @@ public:
     else if (optp.number_of_hashes > maximum_number_of_hashes)
       optp.number_of_hashes = maximum_number_of_hashes;
 
+    // SET THIS TRUE IF YOU WANNA WORK WITH POWER OF 2 optp.table_size = nextPowerOf2(optp.table_size);
+    
     if (optp.table_size < minimum_size)
       optp.table_size = minimum_size;
     else if (optp.table_size > maximum_size)
@@ -171,7 +188,7 @@ protected:
   typedef std::vector<unsigned char> table_type;
 
 public:
-  
+
   bloom_filter()
     : salt_count_(0),
       table_size_(0),
@@ -189,10 +206,32 @@ public:
   {
     salt_count_ = p.optimal_parameters.number_of_hashes;
     table_size_ = p.optimal_parameters.table_size;
-   
-      generate_unique_salt();
 
+    generate_unique_salt();
+    st_1.init(0);
     bit_table_.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
+    bit_table_2.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
+
+    bit_table_3.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
+    bit_table_4.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
+    bit_table_5.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
+    bit_table_6.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
+    bit_table_7.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
+    bit_table_8.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
+   
+    int i = bit_table_.size();
+    int count = 0;
+    while(i != 0)
+      {
+	i=i>>1;
+	count ++;
+      }
+    powerOf2= count-1;
+    int arrAnd[8] = {powerOf2,powerOf2,powerOf2,powerOf2,powerOf2,powerOf2,powerOf2,powerOf2};
+    int arr2And[8] = {15,15,15,15,15,15,15,15};
+    bitAnd = _mm256_load_si256((__m256i *) arrAnd);
+    charAnd = _mm256_load_si256((__m256i *) arr2And);
+
   }
 
   bloom_filter(const bloom_filter& filter)
@@ -258,38 +297,38 @@ public:
     inserted_element_count_ = 0;
   }
 
-
-  inline void insert(int bit_index1,int  bit1)
-  {
-    uint32_t bit_index = bit_index1;
-    uint32_t bit       = bit1;
- 
-
-  bit_table_[bit_index / bits_per_char] |= bit_mask[bit];
- 
-
-  ++inserted_element_count_;
-}
-  //THE COMMENTED PART BELOW IS ORIGINAL IMPLEMENTATION
-  /* 
   inline void insert(const unsigned char* key_begin, const std::size_t& length)
   {
-    uint32_t bit_index = 0;
-    uint32_t bit       = 0;
-   
-    uint32_t* hold= (uint32_t*)key_begin;
-    uint32_t temp = *hold;
-    bit_index =st(temp);
-    bit_index = bit_index % table_size_;
-    bit       = bit_index % bits_per_char;
-    std::cout <<bit_table_.size()<<std::endl;
-    std::cout<<bit_index<<std::endl;
-    //    for (std::size_t i = 0; i < salt_.size(); ++i)
-    //{
-    //	compute_indices(hash_ap(key_begin, length, salt_[0]), bit_index, bit);
+    std::size_t bit_index;
+    std::size_t bit;
+
+    for (std::size_t i = 0; i < salt_.size(); ++i)
+      {
+	//	compute_indices(hash_ap(key_begin, length, salt_[i]), bit_index, bit);
 
 	bit_table_[bit_index / bits_per_char] |= bit_mask[bit];
-	//}
+      }
+
+    ++inserted_element_count_;
+  }
+
+
+  inline void insert(int number, __m256i x1, int ch)
+  {
+    
+    __m256i result;
+    __m256i bit_index;
+    __m256i bit;
+    __m256i div;
+    std::cout<<"hello " << bit_table_.size() <<" "<<powerOf2<< std::endl;
+    for (std::size_t i = 0; i < salt_.size()/8; ++i)
+      {
+	result = st_1(number,x1,0);
+	
+	//	compute_indices(result, bit_index, bit);
+
+	//bit_table_[bit_index / bits_per_char] |= bit_mask[bit];
+      }
 
     ++inserted_element_count_;
   }
@@ -297,73 +336,47 @@ public:
   template <typename T>
   inline void insert(const T& t)
   {
-    std::cout <<"1a";
     // Note: T must be a C++ POD type.
     insert(reinterpret_cast<const unsigned char*>(&t),sizeof(T));
   }
 
-  inline void insert(const std::string& key)
+  /*
+  inline virtual bool contains(const unsigned char* key_begin, const std::size_t length) const
   {
-    std::cout <<"2a";
-    insert(reinterpret_cast<const unsigned char*>(key.data()),key.size());
-  }
+    std::size_t bit_index = 0;
+    std::size_t bit       = 0;
 
-  inline void insert(const char* data, const std::size_t& length)
-  {
-    std::cout<<"3a";
-    insert(reinterpret_cast<const unsigned char*>(data),length);
-  }
-
-  template <typename InputIterator>
-  inline void insert(const InputIterator begin, const InputIterator end)
-    {
-    InputIterator itr = begin;
-    std::cout<<"4a";
-    while (end != itr)
+    for (std::size_t i = 0; i < salt_.size(); ++i)
       {
-	insert(*(itr++));
-      }
-  }
-  */
-  inline virtual bool contains(const unsigned char* key_begin, const std::size_t length) 
-  {
-    uint32_t bit_index = 0;
-    uint32_t bit       = 0;
-    uint32_t* hold= (uint32_t*)key_begin;
-    uint32_t temp = *hold;
-    //bit_index =st(temp);
-    bit_index = bit_index % table_size_;
-    bit       = bit_index % bits_per_char;
-    // for (std::size_t i = 0; i < salt_.size(); ++i)
-    //{
-    //	compute_indices(hash_ap(key_begin, length, salt_[0]), bit_index, bit);
-    //    std::cout<<bit_index<< " "<< bit <<std::endl;
+	compute_indices(hash_ap(key_begin, length, salt_[i]), bit_index, bit);
+
 	if ((bit_table_[bit_index / bits_per_char] & bit_mask[bit]) != bit_mask[bit])
 	  {
 	    return false;
 	  }
-	//}
+      }
 
     return true;
   }
 
   template <typename T>
-  inline bool contains(const T& t)   {
+  inline bool contains(const T& t) const
+  {
     return contains(reinterpret_cast<const unsigned char*>(&t),static_cast<std::size_t>(sizeof(T)));
   }
 
-  inline bool contains(const std::string& key) 
+  inline bool contains(const std::string& key) const
   {
     return contains(reinterpret_cast<const unsigned char*>(key.c_str()),key.size());
   }
 
-  inline bool contains(const char* data, const std::size_t& length) 
+  inline bool contains(const char* data, const std::size_t& length) const
   {
     return contains(reinterpret_cast<const unsigned char*>(data),length);
   }
 
   template <typename InputIterator>
-  inline InputIterator contains_all(const InputIterator begin, const InputIterator end) 
+  inline InputIterator contains_all(const InputIterator begin, const InputIterator end) const
   {
     InputIterator itr = begin;
 
@@ -381,7 +394,7 @@ public:
   }
 
   template <typename InputIterator>
-  inline InputIterator contains_none(const InputIterator begin, const InputIterator end) 
+  inline InputIterator contains_none(const InputIterator begin, const InputIterator end) const
   {
     InputIterator itr = begin;
 
@@ -397,7 +410,7 @@ public:
 
     return end;
   }
-
+  */
   inline virtual unsigned long long int size() const
   {
     return table_size_;
@@ -486,10 +499,24 @@ public:
 
 protected:
 
-  inline virtual void compute_indices(const bloom_type& hash, std::size_t& bit_index, std::size_t& bit) const
+  inline virtual void compute_indices( __m256i& hash, __m256i& bit_index, __m256i& bit, int loop) const
   {
-    bit_index = hash % table_size_;
-    bit       = bit_index % bits_per_char;
+    uint32_t index_array[8];
+    int bit_array[8];
+    /*    hash = _mm256_and_si256 (hash, bitAnd);
+    _mm256_store_si256((__m256i *)index_array,hash);
+    hash = _mm256_and_si256(hash, charAnd);*/
+    _mm256_store_si256((__m256i * )index_array,hash);
+    for(int i = 0; i<loop; i++){
+       index_array[i] = index_array[i]% table_size_;
+      bit_array[i] = index_array[i] % bits_per_char;
+    }
+    
+    bit_index = _mm256_load_si256((__m256i *) index_array);
+    bit = _mm256_load_si256((__m256i * ) bit_array);
+    
+    // bit_index = hash % table_size_;
+    // bit       = bit_index % bits_per_char;
   }
 
   void generate_unique_salt()
@@ -634,9 +661,21 @@ protected:
 
     return hash;
   }
-public:
+
   std::vector<bloom_type>    salt_;
   std::vector<unsigned char> bit_table_;
+  std::vector<unsigned char> bit_table_2;
+  std::vector<unsigned char> bit_table_3;
+  std::vector<unsigned char> bit_table_4;
+  std::vector<unsigned char> bit_table_5;
+  std::vector<unsigned char> bit_table_6;
+  std::vector<unsigned char> bit_table_7;
+  std::vector<unsigned char> bit_table_8;
+  s_simpletab st_1;
+  int powerOf2;
+  __m256i bitAnd;
+  __m256i charAnd;
+  
   unsigned int               salt_count_;
   unsigned long long int     table_size_;
   unsigned long long int     projected_element_count_;

@@ -322,7 +322,7 @@ __m256i s_simpletab::operator()(uint32_t x,__m256i x1,int ch)
 	    {
 	      arr_x[k]=_mm256_extract_epi32(x1,k);
 	      arr_h[k]=m_T[(uint8_t)arr_x[k]][i];
-	    }
+	    } 
 	  temp= _mm256_load_si256((__m256i *) arr_h);
 	  m_h= _mm256_xor_si256(m_h,temp);
 		x1=	_mm256_srli_epi32 (x1, 8);

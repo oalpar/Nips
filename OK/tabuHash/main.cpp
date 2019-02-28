@@ -26,20 +26,17 @@
 
 #include <iostream>
 #include <string>
-
+#include <immintrin.h>
+#include <stdio.h>
 #include "bloom_filter.hpp"
-#include "hashing.h"
+#include <limits>
 int main()
 {
-  simpletab st;
-  st.init();
   bloom_parameters parameters;
-
-  // How many elements roughly do we expect to insert?
-  parameters.projected_element_count = 1000;
+  parameters.projected_element_count = 100000;
 
   // Maximum tolerable false positive probability? (0,1)
-  parameters.false_positive_probability = 0.0001; // 1 in 10000
+  parameters.false_positive_probability = 0.000001; // 1 in 10000
 
   // Simple randomizer (optional)
   parameters.random_seed = 0xA5A5A5A5;
@@ -51,46 +48,35 @@ int main()
     }
 
   parameters.compute_optimal_parameters();
-
+  __m256i test1;
+  
   //Instantiate Bloom Filter
   bloom_filter filter(parameters);
 
   std::string str_list[] = { "AbC", "iJk", "XYZ" };
 
   // Insert into Bloom Filter
-  
+  {
     // Insert some strings
-    /* for (std::size_t i = 0; i < (sizeof(str_list) / sizeof(std::string)); ++i)
-      {
-	std::cout <<i<<std::endl;
-	filter.insert(str_list[i]);
-      } */
-
+ 
     // Insert some numbers
-    for (std::size_t i = 0; i < 2; ++i)
+    for (std::size_t i = 0; i < 1000; ++i)
       {
-	int x= st(i*10000);
-	int index = x % filter.table_size_;
-	int bit = x % 0x08;
-	//bit_index =st(temp);
-	  //bit_index = bit_index % table_size_;
-	//bit       = bit_index % bits_per_char;
-	std::cout <<filter.table_size_<<" "<<0x08<<" "<<index <<std::endl;
-	filter.insert(index,bit);
+	filter.insert(i, test1,0);
       }
-  
-
+  }
+  /*
   // Query Bloom Filter
   {
     // Query the existence of strings
-    /*  for (std::size_t i = 0; i < (sizeof(str_list) / sizeof(std::string)); ++i)
+    for (std::size_t i = 0; i < (sizeof(str_list) / sizeof(std::string)); ++i)
       {
 	if (filter.contains(str_list[i]))
 	  {
 	    std::cout << "BF contains: " << str_list[i] << std::endl;
 	  }
       }
-*/
+
     // Query the existence of numbers
     for (std::size_t i = 0; i < 100; ++i)
       {
@@ -103,23 +89,37 @@ int main()
     std::string invalid_str_list[] = { "AbCX", "iJkX", "XYZX" };
 
     // Query the existence of invalid strings
-    for (std::size_t i = 0; i < 1000000; ++i)
+    for (std::size_t i = 0; i < (sizeof(invalid_str_list) / sizeof(std::string)); ++i)
       {
-	if (filter.contains(i))
+	if (filter.contains(invalid_str_list[i]))
 	  {
-	    //	    std::cout << "BF falsely contains: " << i << std::endl;
+	    std::cout << "BF falsely contains: " << invalid_str_list[i] << std::endl;
 	  }
       }
 
     // Query the existence of invalid numbers
-    for (int i = -1; i > -100; --i)
+    for (int i = -1; i > -10000; --i)
       {
 	if (filter.contains(i))
 	  {
-	    //    std::cout << "BF falsely contains: " << i << std::endl;
+	    std::cout << "BF falsely contains: " << i << std::endl;
 	  }
       }
   }
-
-  return 0;
+  */
+  int temp = 262143;
+  temp = temp & 65535;
+  double result[4];
+  alignas(32) int myarr[8]= {12312312,0,31,12312315,12312316,12312317,12312318,12312319};
+  
+  __m256i temp1= _mm256_load_si256((const  __m256i *) &myarr);
+  __m256d lowDoubles= _mm256_cvtepi32_pd(_mm256_extracti128_si256(temp1,0));
+  // std::cout/* << _mm256_extract_epi64(temp3,0)<<" "<< _mm256_extract_epi64(temp3,1)<<" "<< _mm256_extract_epi64(temp3,7)<<" "*/ <<  temp3[0]<<" "<<temp3[1];
+  __m256d temp4 = _mm256_cvtepi32_pd(_mm256_castsi256_si128(temp1));
+  _mm256_storeu_pd(result, lowDoubles);
+  
+  std::cout<<result[0]<< " " << result[2]<<std::endl;
+  std::cout<<result[0]/5<<" "<<result[2]/5<<std::endl;
+  std::cout<<(int)result[0]/5<<" "<<result[2]/5<<std::endl;
+     return 0;
 }
