@@ -167,7 +167,7 @@ public:
     else if (optp.number_of_hashes > maximum_number_of_hashes)
       optp.number_of_hashes = maximum_number_of_hashes;
 
-    // SET THIS TRUE IF YOU WANNA WORK WITH POWER OF 2 optp.table_size = nextPowerOf2(optp.table_size);
+     optp.table_size = nextPowerOf2(optp.table_size);
     
     if (optp.table_size < minimum_size)
       optp.table_size = minimum_size;
@@ -206,7 +206,7 @@ public:
   {
     salt_count_ = p.optimal_parameters.number_of_hashes;
     table_size_ = p.optimal_parameters.table_size;
-
+    salt_count = roundUp(salt_count,8)/8;
     generate_unique_salt();
     st_1.init(0);
     bit_table_.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
@@ -675,6 +675,19 @@ protected:
   int powerOf2;
   __m256i bitAnd;
   __m256i charAnd;
+
+  int roundUp(int numToRound, int multiple)
+  {
+    if (multiple == 0)
+      return numToRound;
+
+    int remainder = numToRound % multiple;
+    if (remainder == 0)
+      return numToRound;
+
+    return numToRound + multiple - remainder;
+  }
+
   
   unsigned int               salt_count_;
   unsigned long long int     table_size_;
