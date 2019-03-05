@@ -1,0 +1,24 @@
+#include <string>
+#include <vector>
+#include <iostream>
+using namespace std;
+
+struct temp{
+  int i;
+  int j;
+
+  void temp::operator()(){
+    cout<<"hello "<<j;
+  }
+};
+
+int main(){
+  
+  vector<temp>t;
+
+  temp hi;
+  hi.j =2;
+  t.push_back(hi);
+  t[0]();
+  return 0;
+}

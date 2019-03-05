@@ -221,7 +221,7 @@ public:
     bit_table_3.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
     bit_table_4.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
     bit_table_5.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
-     bit_table_6.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
+    bit_table_6.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
     bit_table_7.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
     bit_table_8.resize(table_size_ / bits_per_char, static_cast<unsigned char>(0x00));
    
@@ -321,15 +321,8 @@ public:
 
   inline void insert(int number, __m256i x1, int ch)
   {
-    /*    std::cout<<"number "<<number<< std::endl;
-      std::cout <<"salt_count_ "<< salt_count_<<std::endl;
-    std::cout << "table_size_  "<<table_size_  <<std::endl;
-    // std::cout << "p.optimal_parameters.number_of_hashes "<< p.optimal_parameters.number_of_hashes<<std::endl;
-    std::cout<< "bit_table_3.size() "<<bit_table_3.size()<<std::endl;
-    std::cout<<" powerOf2 "<<  powerOf2<<std::endl;
-    std::cout<< "bit_table_.size() "<< bit_table_.size()<<std::endl;
-    */   
- __m256i result;
+    
+    __m256i result;
     __m256i bit_index;
     __m256i bit;
     __m256i div;
@@ -339,22 +332,16 @@ public:
       {
 	
 	result = hashVec[i](number,x1,0);
-		
+
+	
 	compute_indices(result, bit_index, bit);
-	/*	std::cout<<"result "<<_mm256_extract_epi32(result,0)<<std::endl;
-	std::cout<<"bitindex "<<_mm256_extract_epi32(bit_index,1)<<std::endl;
-	std::cout<<"bit " << _mm256_extract_epi32(bit,1)<<std::endl;
-	*/
+
 	_mm256_store_si256((__m256i *)arr1, bit_index);
 	_mm256_store_si256((__m256i *)arr2,bit);
-	
 	for( int i =0; i< 8 ; i++){
-	  //std::cout<<"arr 2 "<<arr2[i]<<std::endl;
-	  // std::cout<<"arr 1 "<<arr1[i]<<std::endl;
-	  //	  std::cout<<"bit mask"<<arr2[i]<<" "<<bit_mask[arr2[i]]<<std::endl;
-	 bit_table_[(int)arr1[i]/bits_per_char] |= bit_mask[arr2[i]];
+	  bit_table_[arr1[i]/arr2[i]] |= bit_mask[arr2[i]];
 	}
-	std::cout<<"helllo"<<std::endl;
+	
 	}
 
     ++inserted_element_count_;
@@ -366,7 +353,7 @@ public:
     // Note: T must be a C++ POD type.
     insert(reinterpret_cast<const unsigned char*>(&t),sizeof(T));
     }*/
-  
+
   inline virtual bool contains(int number, __m256i x1, int ch)
   {
     __m256i result;
@@ -387,18 +374,17 @@ public:
 	_mm256_store_si256((__m256i *)arr1, bit_index);
 	_mm256_store_si256((__m256i *)arr2,bit);
 	for( int i =0; i< 8 ; i++){
-	  if ((bit_table_[arr1[i] / bits_per_char] & bit_mask[arr2[i]]) !=bit_mask[arr2[i]])
+	  if ((bit_table_[bit_index / bits_per_char] & bit_mask[bit])!=bit_mask[bit])
 	    {
 	      return false;
 	    }
-	  
+	  return true;
 	}
-	return true;
       }
 
   }
     
-  
+
   /*
 
   inline virtual bool contains(const unsigned char* key_begin, const std::size_t length) const

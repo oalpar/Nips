@@ -1,5 +1,5 @@
 /*
-*********************************************************************
+1;5202;0c*********************************************************************
 *                                                                   *
 *                           Open Bloom Filter                       *
 *                                                                   *
@@ -61,9 +61,9 @@ int main()
     // Insert some strings
  
     // Insert some numbers
-    for (std::size_t i = 0; i < 1000; ++i)
+    for (std::size_t i = 0; i < 1; ++i)
       {
-	filter.insert(i, test1,0);
+		filter.insert(i, test1,0);
       }
   }
   /*
@@ -77,16 +77,17 @@ int main()
 	    std::cout << "BF contains: " << str_list[i] << std::endl;
 	  }
       }
-
+  */
     // Query the existence of numbers
-    for (std::size_t i = 0; i < 100; ++i)
+  
+  for (std::size_t i = 0; i < 100; ++i)
       {
-	if (filter.contains(i))
+	if (filter.contains(i,test1,0))
 	  {
 	    std::cout << "BF contains: " << i << std::endl;
 	  }
       }
-
+  /*
     std::string invalid_str_list[] = { "AbCX", "iJkX", "XYZX" };
 
     // Query the existence of invalid strings
@@ -108,20 +109,12 @@ int main()
       }
   }
   */
-  double result[4];
-  uint32_t myarr[8]= {0x10000000,0x00000000,11,0,0,12,0,13};
-  __m256i temp = _mm256_loadu_si256((const  __m256i *) &myarr);
-  __m256d temp2 = _mm256_castsi256_pd (temp);
-  
+ 
 
   // __m256d lowDoubles= _mm256_cvtepi32_pd(_mm256_extracti128_si256(temp1,0));
   // std::cout/* << _mm256_extract_epi64(temp3,0)<<" "<< _mm256_extract_epi64(temp3,1)<<" "<< _mm256_extract_epi64(temp3,7)<<" "*/ <<  temp3[0]<<" "<<temp3[1];
   //  __m256d temp4 = _mm256_cvtepi32_pd(_mm256_castsi256_si128(temp1));
-  _mm256_storeu_pd(result, temp2);
   
-  std::cout<<result[0]<< " " << result[1]<<std::endl;
-  std::cout<<result[2]<<" "<<result[3]<<std::endl;
-
   
   return 0;
 
