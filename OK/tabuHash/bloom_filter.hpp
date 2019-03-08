@@ -232,7 +232,7 @@ public:
 	i=i>>1;
 	count ++;
       }
-    powerOf2= count-1;
+    powerOf2=(1<<(count-1))-1;
     int arrAnd[8] = {powerOf2,powerOf2,powerOf2,powerOf2,powerOf2,powerOf2,powerOf2,powerOf2};
     int arr2And[8] = {15,15,15,15,15,15,15,15};
     bitAnd = _mm256_load_si256((__m256i *) arrAnd);
@@ -321,25 +321,26 @@ public:
 
   inline void insert(int number, __m256i x1, int ch)
   {
-    /*    std::cout<<"number "<<number<< std::endl;
+        std::cout<<"number "<<number<< std::endl;
       std::cout <<"salt_count_ "<< salt_count_<<std::endl;
     std::cout << "table_size_  "<<table_size_  <<std::endl;
     // std::cout << "p.optimal_parameters.number_of_hashes "<< p.optimal_parameters.number_of_hashes<<std::endl;
     std::cout<< "bit_table_3.size() "<<bit_table_3.size()<<std::endl;
     std::cout<<" powerOf2 "<<  powerOf2<<std::endl;
     std::cout<< "bit_table_.size() "<< bit_table_.size()<<std::endl;
-    */   
+       
  __m256i result;
     __m256i bit_index;
     __m256i bit;
     __m256i div;
-    int32_t arr1[8];
-    int32_t arr2[8];
+    uint32_t arr1[8];
+    uint32_t arr2[8];
+    uint32_t arr3[8];
         for (std::size_t i = 0; i < salt_count_; ++i)
       {
 	
 	result = hashVec[i](number,x1,0);
-		
+	_mm256_store_si256((__m256i *)arr3,result);
 	compute_indices(result, bit_index, bit);
 	/*	std::cout<<"result "<<_mm256_extract_epi32(result,0)<<std::endl;
 	std::cout<<"bitindex "<<_mm256_extract_epi32(bit_index,1)<<std::endl;
@@ -347,6 +348,10 @@ public:
 	*/
 	_mm256_store_si256((__m256i *)arr1, bit_index);
 	_mm256_store_si256((__m256i *)arr2,bit);
+	std::cout<< arr1[0]<<"AAAAAA "<<arr1[1]<<" "<<arr1[2]<< " "<<arr1[3]<< " "<<arr1[4]<< " "<<arr1[5]<< " "<<arr1[6]<< " "<<arr1[7]<< std::endl;
+	std::cout<< arr2[0]<<"BBBB "<<arr2[1]<<" "<<arr2[2]<< " "<<arr2[3]<< " "<<arr2[4]<< " "<<arr2[5]<< " "<<arr2[6]<< " "<<arr2[7]<< std::endl;
+	std::cout<< arr3[0]<<" "<<arr3[1]<<" "<<arr3[2]<< " "<<arr3[3]<< " "<<arr3[4]<< " "<<arr3[5]<< " "<<arr3[6]<< " "<<arr3[7]<< std::endl;
+	
 	
 	for( int i =0; i< 8 ; i++){
 	  //std::cout<<"arr 2 "<<arr2[i]<<std::endl;
